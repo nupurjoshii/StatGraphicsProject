@@ -1,2 +1,40 @@
 # Data sources
 
+```{r setup, include=FALSE}
+# this prevents package loading message from appearing in the rendered version of your problem set 
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+rm(list=ls())
+library(devtools)
+library(twitteR)
+library(tm)
+library(wordcloud)
+library(ggplot2)
+library(fpc)
+library(base64enc)
+library(igraph)
+library("openssl")
+library("httpuv")
+
+#Part 1 - Twitter Data Download
+#Application Details
+options(httr_oauth_cache=T)
+api_key='MZKRdmz4WnrJaNljztrnh0A6Q'
+api_secret='L66Aez4pIjzfUWIbCywpktIYOeuvfP0sMIjxmW8dskje9Kw4O4'
+access_token='31146251-phjrau5Yj6iUVCHGjATMYU9KyTi0WUdI7eqpwuODG'
+access_token_secret='yzw5f8fcfaGx7iOwuzeWS1RM5QwguZUc8cLYQmZuWYA08'
+setup_twitter_oauth(api_key,api_secret,access_token,access_token_secret)
+
+#Fetching tweets of input keywords 
+web3_tweets= searchTwitter('Web3', n=1000,lang = 'en')
+eth_tweets= searchTwitter('Ethereum', n=1000,lang = 'en')
+btc_tweets= searchTwitter('Bitcoin', n=1000,lang = 'en')
+
+web3_tweet_df=twListToDF(web3_tweets)
+eth_tweet_df=twListToDF(eth_tweets)
+btc_tweet_df=twListToDF(btc_tweets)
+
+
+```
+```
+
+```

@@ -1,1 +1,63 @@
 # Data transformation
+
+web3_text<- web3_tweet_df$text
+eth_text<- eth_tweet_df$text
+btc_text<- btc_tweet_df$text
+
+
+#convert all text to lower case
+web3_text<- tolower(web3_text)
+eth_text<- tolower(eth_text)
+btc_text<- tolower(btc_text)
+
+
+# Replace blank space (“rt”)
+web3_text <- gsub("rt", "", web3_text)
+eth_text <- gsub("rt", "", eth_text)
+btc_text <- gsub("rt", "", btc_text)
+
+
+# Replace @UserName
+web3_text <- gsub("@\\w+", "", web3_text)
+eth_text <- gsub("@\\w+", "", eth_text)
+btc_text <- gsub("@\\w+", "", btc_text)
+
+
+# Remove punctuation
+web3_text <- gsub("[[:punct:]]", "", web3_text)
+eth_text <- gsub("[[:punct:]]", "", eth_text)
+btc_text <- gsub("[[:punct:]]", "", btc_text)
+
+
+
+# Remove links
+web3_text <- gsub("http\\w+", "", web3_text)
+eth_text <- gsub("http\\w+", "", eth_text)
+btc_text <- gsub("http\\w+", "", btc_text)
+
+
+# Remove tabs
+web3_text <- gsub("[ |\t]{2,}", "", web3_text)
+eth_text <- gsub("[ |\t]{2,}", "", eth_text)
+btc_text <- gsub("[ |\t]{2,}", "", btc_text)
+
+
+
+# Remove blank spaces at the beginning
+web3_text <- gsub("^ ", "", web3_text)
+eth_text <- gsub("^ ", "", eth_text)
+btc_text <- gsub("^ ", "", btc_text)
+
+
+# Remove blank spaces at the end
+web3_text <- gsub(" $", "", web3_text)
+eth_text <- gsub(" $", "", eth_text)
+btc_text <- gsub(" $", "", btc_text)
+
+
+library("tm")
+#create corpus
+web3_tweets.text.corpus <- Corpus(VectorSource(web3_text))
+eth_tweets.text.corpus <- Corpus(VectorSource(eth_text))
+btc_tweets.text.corpus <- Corpus(VectorSource(btc_text))
+
