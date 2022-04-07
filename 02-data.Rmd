@@ -33,8 +33,78 @@ web3_tweet_df=twListToDF(web3_tweets)
 eth_tweet_df=twListToDF(eth_tweets)
 btc_tweet_df=twListToDF(btc_tweets)
 
+# Convert char date to correct date format
+#web3
+web3_tweet_df$created <- as.Date(web3_tweet_df$created, format= "%m/%d/%y")
+web3_tweet_df$text <- as.character(web3_tweet_df$text)
+str(web3_tweet_df)
+#eth
+eth_tweet_df$created <- as.Date(eth_tweet_df$created, format= "%m/%d/%y")
+eth_tweet_df$text <- as.character(eth_tweet_df$text)
+str(eth_tweet_df)
+#btc
+btc_tweet_df$created <- as.Date(btc_tweet_df$created, format= "%m/%d/%y")
+btc_tweet_df$text <- as.character(btc_tweet_df$text)
+str(btc_tweet_df)
 
 ```
+#Check Non-modified, non-clean data word clouds to get a sense of what people are discussing about
+
+
+```{r setup, include=FALSE}
+# this prevents package loading message from appearing in the rendered version of your problem set 
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+
+
+
+makeCorpus <- function(text){ #Function for making corpus and cleaning the tweets fetched
+  twitterdf <- do.call("rbind", lapply(text, as.data.frame)) #store the fetched tweets as a data frame
+  twitterdf$text <- sapply(twitterdf$text,function(row) iconv(row, "latin1", "ASCII", sub=""))#Removing emoticons from tweets
+  twitterCorpus <- Corpus(VectorSource(twitterdf$text)) #Creating Corpus
+  toSpace <- content_transformer(function(x, pattern) gsub(pattern, " ", x)) #function to replace a pattern to white space using regex
+  twitterCorpus <- tm_map(twitterCorpus, toSpace, "(RT|via)((?:\\b\\W*@\\w+)+)") #match rt or via
+  twitterCorpus <- tm_map(twitterCorpus, toSpace, "@\\w+") #match @
+  twitterCorpus <- tm_map(twitterCorpus, toSpace, "[ \t]{2,}") #match tabs
+  twitterCorpus <- tm_map(twitterCorpus, toSpace, "[ |\n]{1,}") #match new lines
+  twitterCorpus <- tm_map(twitterCorpus, toSpace, "^ ") #match white space at begenning
+  twitterCorpus <- tm_map(twitterCorpus, toSpace, " $") #match white space at the end
+  twitterCorpus <- tm_map(twitterCorpus, PlainTextDocument)
+  twitterCorpus <- tm_map(twitterCorpus, removeNumbers)
+  twitterCorpus <- tm_map(twitterCorpus, removePunctuation)
+  twitterCorpus <- tm_map(twitterCorpus, toSpace, "http[[:alnum:]]*") #remove url from tweets
+  twitterCorpus <- tm_map(twitterCorpus,removeWords,stopwords("en"))
+  twitterCorpus <- tm_map(twitterCorpus, content_transformer(tolower))
+  return(twitterCorpus)
+}
+
+
+#Wordcloud
+makeWordcloud<-function (getText){ #plotting wordcloud
+  twicorpus<-makeCorpus(getText)
+  myTdm<-TermDocumentMatrix(twicorpus, control=list(wordLengths=c(4,Inf))) #Create TDM
+  matrix<-as.matrix(myTdm)
+  wordFreq <- sort(rowSums(matrix), decreasing=TRUE)#find frequency of words and sorting them in descending
+  set.seed(375) 
+  grayLevels <- gray( (wordFreq+10) / (max(wordFreq)+10) )
+  wordcloud(words=names(wordFreq), freq=wordFreq, min.freq=3, random.order=F,colors=grayLevels)
+}
+
+
+
+
+freqPlot<-function (getText){ #frequency plot of word count
+  twicorpus<-makeCorpus(getText)
+  myTdm<-TermDocumentMatrix(twicorpus, control=list(wordLengths=c(4,Inf)))
+  matrix<-as.matrix(myTdm)
+  termFrequency <- rowSums(matrix)
+  termFrequency <- subset(termFrequency, termFrequency>=10)
+  df <- data.frame(term=names(termFrequency), freq=termFrequency)
+  ggplot(df, aes(x=term, y=freq)) + geom_bar(stat="identity") + coord_flip()
+}
+
+#freqPlot(web3_tweets)
+makeWordcloud(web3_tweets)
+makeWordcloud(eth_tweets)
+makeWordcloud(btc_tweets)
 ```
 
-```
