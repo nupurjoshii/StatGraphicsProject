@@ -1,6 +1,6 @@
 --- 
 title: "Eth-TwitterSetiment EDA"
-author: "Nupur Joshi, Fahad Alkaja"
+author: "Nupur Joshi, Fahad Alhkaja"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 ---
