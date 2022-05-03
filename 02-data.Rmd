@@ -66,7 +66,7 @@ makeCorpus <- function(text){ #Function for making corpus and cleaning the tweet
   twitterCorpus <- tm_map(twitterCorpus, toSpace, "@\\w+") #match @
   twitterCorpus <- tm_map(twitterCorpus, toSpace, "[ \t]{2,}") #match tabs
   twitterCorpus <- tm_map(twitterCorpus, toSpace, "[ |\n]{1,}") #match new lines
-  twitterCorpus <- tm_map(twitterCorpus, toSpace, "^ ") #match white space at begenning
+  twitterCorpus <- tm_map(twitterCorpus, toSpace, "^ ") #match white space at beginning
   twitterCorpus <- tm_map(twitterCorpus, toSpace, " $") #match white space at the end
   twitterCorpus <- tm_map(twitterCorpus, PlainTextDocument)
   twitterCorpus <- tm_map(twitterCorpus, removeNumbers)
