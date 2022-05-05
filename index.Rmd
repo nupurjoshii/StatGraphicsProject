@@ -1,5 +1,5 @@
 --- 
-title: "Eth-TwitterSetiment EDA"
+title: "Crypto vs Stock Market"
 author: "Nupur Joshi, Fahad Alhkaja"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
