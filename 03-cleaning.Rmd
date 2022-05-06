@@ -1,65 +1,72 @@
 # Data transformation
 
+## Nupur Descripiton
+
+Describe what you did to get/clean the data ~1/2 page.
+
+```{r}
+
+#Part 3 - Dataset over-view
+
+# head(eth)
+# tail(eth)
+# head(btc)
+# tail(btc)
+# head(doge)
+# tail(doge)
+# 
+# summary(eth)
+# summary(btc)
+# summary(doge)
+# summary(dji_hist_prices)
+# summary(sandp_hist_prices)
+# 
+# skim(eth)
+# skim(btc)
+# summary(doge)
+# skim(dji_hist_prices)
+# skim(sandp_hist_prices)
 
 
-web3_text<- web3_tweet_df$text
-eth_text<- eth_tweet_df$text
-btc_text<- btc_tweet_df$text
+# No missing values in our data - as we are primarily sourcing financial data
+```
 
+Data Cleanup involved converting dates to proper datetime format to be able to display them on time series and filtering to the dates we selected, 2020 to now.
 
-#convert all text to lower case
-web3_text<- tolower(web3_text)
-eth_text<- tolower(eth_text)
-btc_text<- tolower(btc_text)
+```{r}
+#Part 4 - Data treatment and clean up of missing values
 
+#4.1 - convert dates to datetime format and sort by date
+eth$date <- ymd(eth$date)
+btc$date <- ymd(btc$date)
+doge$date <- ymd(doge$date)
+dji_hist_prices$date <- ymd(dji_hist_prices$date)
+sandp_hist_prices$date <- ymd(sandp_hist_prices$date)
 
-# Replace blank space (“rt”)
-web3_text <- gsub("rt", "", web3_text)
-eth_text <- gsub("rt", "", eth_text)
-btc_text <- gsub("rt", "", btc_text)
+# Twitter Data Cleanup
 
+btc_tweet_count$Date <- dmy(btc_tweet_count$Date)
+btc_tweet_count$Date <- as.Date(btc_tweet_count$Date, format ="%Y/%m/%d")
+btc_tweets <- btc_tweet_count %>%
+  filter(Date >= '2020-01-01', Date <= '2022-04-30') %>%
+  mutate(symbol = "Bitcoin",
+         TweetCount = as.double(TweetCount))
 
-# Replace @UserName
-web3_text <- gsub("@\\w+", "", web3_text)
-eth_text <- gsub("@\\w+", "", eth_text)
-btc_text <- gsub("@\\w+", "", btc_text)
+#eth
+eth_tweet_count$Date <- dmy(eth_tweet_count$Date)
+eth_tweet_count$Date <- as.Date(eth_tweet_count$Date, format ="%Y/%m/%d")
+eth_tweets <- eth_tweet_count %>%
+  filter(Date >= '2020-01-01', Date <= '2022-04-30') %>%
+  mutate(symbol = "Ethereum",
+         TweetCount = as.double(TweetCount))
 
+#doge
+doge_tweet_count$Date <- dmy(doge_tweet_count$Date)
+doge_tweet_count$Date <- as.Date(doge_tweet_count$Date, format ="%Y/%m/%d")
+doge_tweets <- doge_tweet_count %>%
+  filter(Date >= '2020-01-01', Date <= '2022-04-30') %>%
+  mutate(symbol = "Dogecoin",
+         TweetCount = as.double(TweetCount))
 
-# Remove punctuation
-web3_text <- gsub("[[:punct:]]", "", web3_text)
-eth_text <- gsub("[[:punct:]]", "", eth_text)
-btc_text <- gsub("[[:punct:]]", "", btc_text)
-
-
-
-# Remove links
-web3_text <- gsub("http\\w+", "", web3_text)
-eth_text <- gsub("http\\w+", "", eth_text)
-btc_text <- gsub("http\\w+", "", btc_text)
-
-
-# Remove tabs
-web3_text <- gsub("[ |\t]{2,}", "", web3_text)
-eth_text <- gsub("[ |\t]{2,}", "", eth_text)
-btc_text <- gsub("[ |\t]{2,}", "", btc_text)
-
-
-
-# Remove blank spaces at the beginning
-web3_text <- gsub("^ ", "", web3_text)
-eth_text <- gsub("^ ", "", eth_text)
-btc_text <- gsub("^ ", "", btc_text)
-
-
-# Remove blank spaces at the end
-web3_text <- gsub(" $", "", web3_text)
-eth_text <- gsub(" $", "", eth_text)
-btc_text <- gsub(" $", "", btc_text)
-
-
-library("tm")
-#create corpus
-web3_tweets.text.corpus <- Corpus(VectorSource(web3_text))
-eth_tweets.text.corpus <- Corpus(VectorSource(eth_text))
-btc_tweets.text.corpus <- Corpus(VectorSource(btc_text))
+```
 

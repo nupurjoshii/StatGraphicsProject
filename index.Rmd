@@ -7,15 +7,17 @@ site: bookdown::bookdown_site
 
 # Introduction
 
-Every time period throughout humanity has seen radical changes, none more so than these past few decades; the typewriter was replaced by the computer, mobile phones replaced telegraphs, emails replaced physical mail, gold was replaced by an easier to transfer paper bill. Change is inevitable and that is exactly what people are claiming to do with the crypto and alternative currency market. 
+Cryptocurrencies such as Bitcoin, Ethereum, and even Dogecoin have evolved significantly from mere curiosity to a punchline to viable investment, making them nearly impossible to ignore. 
+These cryptocurrencies are powered by the underlying technology of blockchains, which register every transaction and cannot be altered. Different blockchains support different kinds of cryptocurrencies: Bitcoin, for instance, lives on the bitcoin blockchain; ether exists on the ethereum blockchain.  
 
-Bitcoin for all intents and purposes can be thought of as a digital decentralized currency that no bank or country controls, and its popularity and price have soared throughout the past decade. Some people call it digital gold and think of it as an asset. Some people claim that it is the future and the only way we can reduce inflation and dependence on governments and institutions.
+Many leading investors hate cryptocurrency; Warren Buffett has called bitcoin "rat poison squared." Others, including hedge-fund manager Paul Tudor Jones, have climbed aboard. 
 
-While Bitcoin is the clear front runner in terms of cryptocurrency market cap, Ethereum is the second largest.Therefore, studying Bitcoin and Ethereum can serve as a benchmark for us to understand, inform and educate us about the entire cryptocurrency market.
+It's challenging for a casual observer or a "normie" to disentangle the hype from any true potential. Yet, it's also difficult to shake that feeling: Are digital tokens worthy of a spot in my portfolio? Is it even possible for them to be a viable asset class?
 
-We can gain a deeper insight into them by studying their trends such as how they have changed over time and attempt to examine the reasons for it while comparing it to that of a more traditional market such as the US stock exchange by examining the S & P 500.
+We wanted to find out - what is driving this massive momentum in cryptocurrencies now and how does it compare to the global markets?
 
-The goal of this project is to study historical price trends of Bitcoin and Ethereum amongst other features against the S & P 500 over the same time period. This study will help shed light on the relationship between these different markets people have been recently pouring their money into.
+The purpose of this project is to conduct an exploratory analysis of cryptocurrency price trends, trading volume, and the influence of social media and cryptocurrency-related conversations on the market capitalization of these prices. Additionally, we wish to compare cryptocurrency as an asset class to the global stock, bond, and gold markets.
+
 
 
 

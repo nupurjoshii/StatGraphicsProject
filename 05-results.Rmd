@@ -1,1 +1,716 @@
 # Results
+
+
+
+## Crypto Work and Graphs
+
+```{r crypto_work, warning=FALSE,message=FALSE}
+
+# Price-Trends for Ethereum, Bitcoin and Doge
+
+#ETH Chart
+eth[which.max(eth$price),]
+eth %>% 
+  ggplot( aes(x= date, y= price)) +
+  geom_line(color="#69b3a2") +
+  ylim(0,5000) +
+  annotate(geom="text", x=as.Date("2021-01-01"), y=4808, 
+           label="Ethereum price reached 4.8k$\nat the end of 2021") +
+  annotate(geom="point", x=as.Date("2021-11-08"), y=4808, size=8, shape=21, fill="transparent") +
+  theme_ipsum()
+
+#Bitcoin Chart
+btc[which.max(btc$price),]
+btc %>% 
+  ggplot( aes(x= date, y= price)) +
+  geom_line(color="#69b3a2") +
+  ylim(0,70000) +
+  annotate(geom="text", x=as.Date("2020-11-07"), y=67000 ,
+           label="Bitcoin price reached 67.5k$\nat the end of 2021") +
+  annotate(geom="point", x=as.Date("2021-11-07"), y=67527.9, size=8, shape=21, fill="transparent") +
+  theme_ipsum()
+
+
+#Doge Chart
+doge[which.max(doge$price),]
+doge %>% 
+  ggplot( aes(x= date, y= price)) +
+  geom_line(color="#69b3a2") +
+  ylim(0,0.8) +
+  annotate(geom="text", x=as.Date("2020-08-07"), y=0.69, 
+           label="Doge price reached an all time high\non 7th May 2021. \nElon Musk appeared on SNL on 8th May 2021") +
+  annotate(geom="point", x=as.Date("2021-05-07"), y=0.69, size=8, shape=21, fill="transparent") +
+  theme_ipsum()
+
+combined_cryptos <-rbind(eth,btc,doge,cardano,binancecoin) %>%
+  group_by(coin_id) %>% 
+  mutate(index = 100*price/price[1],
+         pc_change = 100*(price- lag(price))/lag(price)) %>%
+  ungroup()
+  
+
+p1 <-plot_ly(combined_cryptos, x = ~date, y = ~index, color = ~coin_id, title = "Index") %>%
+  add_lines() %>%
+  layout(yaxis = list(title = "Index"))
+# 
+p2 <- plot_ly(combined_cryptos, x = ~date, y = ~pc_change, color = ~coin_id, title = "Percent Change") %>%
+  add_lines() %>%
+  layout(yaxis = list(title = "Daily Percent Change"))
+# 
+p3 <- plot_ly(combined_cryptos, x = ~date, y = ~price, color = ~coin_id, title = "Price") %>% 
+  add_lines() %>%
+  layout(yaxis = list(title = "Price($)"))
+
+subplot(style(p1, showlegend = FALSE),
+        style(p2, showlegend = FALSE),
+        style(p3, showlegend = TRUE),
+        titleY = TRUE,
+        margin = 0.05) %>%
+  layout(title = "Crypto Market Over Time")
+
+# Make Boxplot of Cryptos pc_change --> Distribution of daily percentage change of cryptos
+
+plot_ly(combined_cryptos, x = ~pc_change, color = ~coin_id, type = "box") %>%
+  layout(title = "Crypto Market:Box Plot Distribution of Daily Percentage Change",
+         xaxis = list(title = "Daily Percentage Change"), margin = 0.02)
+
+
+
+```
+## Stock Graphs
+
+```{r stockgraphs}
+stock_indices <- rbind(dji_hist_prices, sandp_hist_prices) %>%
+  mutate(symbol = if_else(symbol == "^GSPC", "S & P 500", "Dow Jones")) %>%
+  group_by(symbol) %>% 
+  mutate(index = 100*close/close[1],
+         daily_pc_change = 100*(close- lag(close))/lag(close)) %>%
+  ungroup()
+
+
+P1 <-plot_ly(stock_indices, x = ~date, y = ~index, color = ~symbol) %>%
+  add_lines() %>%
+  layout(yaxis = list(title = "Relative Index"))
+# 
+P2 <- plot_ly(stock_indices, x = ~date, y = ~daily_pc_change, color = ~symbol) %>%
+  add_lines() %>%
+  layout(yaxis = list(title = "Daily Percent Change"))
+# 
+P3 <- plot_ly(stock_indices, x = ~date, y = ~close, color = ~symbol) %>% 
+  add_lines() %>%
+  layout(yaxis = list(title = "Index Value"))
+
+subplot(style(P1, showlegend = FALSE),
+        style(P2, showlegend = FALSE),
+        style(P3, showlegend = TRUE),
+        titleY = TRUE,
+        margin = 0.05) %>%
+  layout(title = "Stock Market Over Time")
+
+# Make Boxplot of DJI vs SP500 daily pc_change
+
+plot_ly(stock_indices, x = ~daily_pc_change, color = ~symbol, type = "box") %>% 
+  layout(title = "Stock Market: Box Plot Distribution of Daily Percentage Change",
+         xaxis = list(title = "Daily Percentage Change"), margin = 0.02)
+
+#S&P Chart
+
+fig <- sandp_hist_prices %>% plot_ly(x = ~date, type="candlestick",
+                      open = ~sandp_hist_prices$open, close = ~sandp_hist_prices$close,
+                      high = ~sandp_hist_prices$high, low = ~sandp_hist_prices$low) 
+fig <- fig %>% layout(title = "S$P500 Price-Trend")
+
+fig
+
+
+#DJI Chart
+
+fig2 <- dji_hist_prices %>% plot_ly(x = ~date, type="candlestick",
+                                     open = ~dji_hist_prices$open, close = ~dji_hist_prices$close,
+                                     high = ~dji_hist_prices$high, low = ~dji_hist_prices$low) 
+fig2 <- fig2 %>% layout(title = "DJI Price-Trend")
+
+fig2
+
+```
+
+## Heatmap Price
+
+```{r}
+
+# Correlation HeatMap
+
+btc_price_column <- btc %>%
+  dplyr::select(price) %>%
+  rename(Bitcoin = price)
+
+eth_price_column <- eth %>%
+  dplyr::select(price) %>%
+  rename(Ethereum = price)
+
+doge_price_column <- doge %>%
+  dplyr::select(price) %>%
+  rename(Dogecoin = price)
+
+cardano_price_column <- cardano %>%
+  dplyr::select(price) %>%
+  rename(Cardano = price)
+
+binancecoin_price_column <- binancecoin %>%
+  dplyr::select(price) %>%
+  rename(Binancecoin = price)
+
+cryptos_price_list <- cbind(btc_price_column, eth_price_column, doge_price_column, cardano_price_column, binancecoin_price_column, btc$date)
+
+corr_cryptos <- cryptos_price_list %>%
+  dplyr::select(-`btc$date`) %>% 
+  cor()
+
+corr_cryptos <- round(corr_cryptos, 3)
+
+# Following Code was copied from the example found here:
+# http://www.sthda.com/english/wiki/ggplot2-quick-correlation-matrix-heatmap-r-software-and-data-visualization
+
+cormat <-corr_cryptos
+
+
+melted_corr_cryptos <- melt(corr_cryptos)
+
+
+# Get lower triangle of the correlation matrix
+  get_lower_tri<-function(cormat){
+    cormat[upper.tri(cormat)] <- NA
+    return(cormat)
+  }
+  # Get upper triangle of the correlation matrix
+  get_upper_tri <- function(cormat){
+    cormat[lower.tri(cormat)]<- NA
+    return(cormat)
+  }
+  
+reorder_cormat <- function(cormat){
+# Use correlation between variables as distance
+dd <- as.dist((1-cormat)/2)
+hc <- hclust(dd)
+cormat <-cormat[hc$order, hc$order]
+}
+  
+  
+# Reorder the correlation matrix
+cormat <- reorder_cormat(cormat)
+upper_tri <- get_upper_tri(cormat)
+# Melt the correlation matrix
+melted_cormat <- melt(upper_tri, na.rm = TRUE)
+# Create a ggheatmap
+ggheatmap_price <- ggplot(melted_cormat, aes(Var2, Var1, fill = value))+
+ geom_tile(color = "white")+
+ scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+   midpoint = 0, limit = c(-1,1), space = "Lab", 
+    name="Pearson\nCorrelation") +
+  theme_minimal()+ # minimal theme
+ theme(axis.text.x = element_text(angle = 45, vjust = 1, 
+    size = 12, hjust = 1))+
+ coord_fixed()
+
+price_heatmap <- ggheatmap_price + 
+geom_text(aes(Var2, Var1, label = value), color = "black", size = 4) +
+theme(
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank(),
+  panel.grid.major = element_blank(),
+  panel.border = element_blank(),
+  panel.background = element_blank(),
+  axis.ticks = element_blank(),
+  legend.justification = c(1, 0),
+  legend.position = c(1.5, 0),
+  legend.direction = "vertical")+
+  guides(fill = guide_colorbar(barwidth = 1, barheight = 10,
+                title.position = "top", title.hjust = 0.5))
+
+price_heatmap + labs(title = "Correlation Heatmap: Cryptocurrency Prices",
+                     subtitle = "The price movement of most of these are very highly correlated.")
+
+
+```
+
+## Heatmap Percent Change
+```{r pc-change_heatmap}
+
+# Repeat the Process for PC change
+
+# Correlation HeatMap
+
+btc_pchange_column <- btc %>%
+  mutate(index = 100*price/price[1],
+         pc_change = 100*(price- lag(price))/lag(price)) %>% 
+  dplyr::select(pc_change) %>%
+  rename(Bitcoin = pc_change)
+
+eth_pchange_column <- eth %>%
+  mutate(index = 100*price/price[1],
+           pc_change = 100*(price- lag(price))/lag(price)) %>%
+  dplyr::select(pc_change) %>%
+  rename(Ethereum = pc_change)
+
+doge_pchange_column <- doge %>%
+  mutate(index = 100*price/price[1],
+         pc_change = 100*(price- lag(price))/lag(price)) %>%
+  dplyr::select(pc_change) %>%
+  rename(Dogecoin = pc_change)
+
+cardano_pchange_column <- cardano %>%
+  mutate(index = 100*price/price[1],
+         pc_change = 100*(price- lag(price))/lag(price)) %>%
+  dplyr::select(pc_change) %>%
+  rename(Cardano = pc_change)
+
+binancecoin_pchange_column <- binancecoin %>%
+  mutate(index = 100*price/price[1],
+         pc_change = 100*(price- lag(price))/lag(price)) %>%
+  dplyr::select(pc_change) %>%
+  rename(Binancecoin = pc_change)
+
+cryptos_pchange_list <- cbind(btc_pchange_column, eth_pchange_column, doge_pchange_column, cardano_pchange_column, binancecoin_pchange_column, btc$date) %>%
+  drop_na()
+
+
+sandp_pchange_column <- sandp_hist_prices %>%
+  mutate(index = 100*close/close[1],
+           pc_change = 100*(close- lag(close))/lag(close)) %>%
+  dplyr::select(pc_change,date) %>%
+  rename(`S & P 500` = pc_change)
+
+dowjones_pchange_column <- dji_hist_prices %>%
+  mutate(index = 100*close/close[1],
+           pc_change = 100*(close- lag(close))/lag(close)) %>%
+  dplyr::select(pc_change,date) %>%
+  rename(`Dow Jones` = pc_change)
+
+stocks_pchange_list <- left_join(sandp_pchange_column, dowjones_pchange_column)
+
+cryptos_stocks_pchange_list <- left_join(cryptos_pchange_list, stocks_pchange_list, by = c("btc$date" = "date"))
+
+corr_cryptos_pchange <- cryptos_pchange_list %>%
+  dplyr::select(-`btc$date`) %>% 
+  cor()
+
+corr_cryptos_stocks_pchange <- cryptos_stocks_pchange_list %>%
+  dplyr::select(-`btc$date`) %>% 
+  drop_na() %>% 
+  cor()
+
+corr_cryptos_pchange <- round(corr_cryptos_pchange, 3)
+
+corr_cryptos_stocks_pchange <- round(corr_cryptos_stocks_pchange, 3)
+
+# Following Code was copied from the example found here:
+# http://www.sthda.com/english/wiki/ggplot2-quick-correlation-matrix-heatmap-r-software-and-data-visualization
+
+#cormat <-corr_cryptos_pchange
+
+cormat <- corr_cryptos_stocks_pchange
+
+
+
+melted_corr_cryptos_stocks <- melt(corr_cryptos_stocks_pchange)
+
+melted_cormat <- melted_corr_cryptos
+
+
+# Get lower triangle of the correlation matrix
+  get_lower_tri<-function(cormat){
+    cormat[upper.tri(cormat)] <- NA
+    return(cormat)
+  }
+  # Get upper triangle of the correlation matrix
+  get_upper_tri <- function(cormat){
+    cormat[lower.tri(cormat)]<- NA
+    return(cormat)
+  }
+  
+reorder_cormat <- function(cormat){
+# Use correlation between variables as distance
+dd <- as.dist((1-cormat)/2)
+hc <- hclust(dd)
+cormat <-cormat[hc$order, hc$order]
+}
+  
+  
+# Reorder the correlation matrix
+cormat <- reorder_cormat(cormat)
+upper_tri <- get_upper_tri(cormat)
+# Melt the correlation matrix
+melted_cormat <- melt(upper_tri, na.rm = TRUE)
+# Create a ggheatmap
+ggheatmap_pchange <- ggplot(melted_cormat, aes(Var2, Var1, fill = value))+
+ geom_tile(color = "white")+
+ scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+   midpoint = 0, limit = c(-1,1), space = "Lab", 
+    name="Pearson\nCorrelation") +
+  theme_minimal()+ # minimal theme
+ theme(axis.text.x = element_text(angle = 45, vjust = 1, 
+    size = 12, hjust = 1))+
+ coord_fixed()
+
+
+pchange_heatmap <- ggheatmap_pchange + 
+geom_text(aes(Var2, Var1, label = value), color = "black", size = 4) +
+theme(
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank(),
+  panel.grid.major = element_blank(),
+  panel.border = element_blank(),
+  panel.background = element_blank(),
+  axis.ticks = element_blank(),
+  legend.justification = c(1, 0),
+  legend.position = c(1.5, 0),
+  legend.direction = "vertical")+
+  guides(fill = guide_colorbar(barwidth = 1, barheight = 10,
+                title.position = "top", title.hjust = 0.5))
+
+pchange_heatmap + labs(title = "Correlation Heatmap:Crypto and Stocks Daily % Change",
+                     subtitle = "Dogecoin and Stocks correlation values stick out.")
+```
+
+## Index Heatmap
+
+```{r index_heatmap}
+
+# Repeat the Process for Index Method
+
+# Correlation HeatMap
+
+btc_index_column <- btc %>%
+  mutate(index = 100*price/price[1],
+         pc_change = 100*(price- lag(price))/lag(price)) %>% 
+  dplyr::select(index) %>%
+  rename(Bitcoin = index)
+
+eth_index_column <- eth %>%
+  mutate(index = 100*price/price[1],
+           pc_change = 100*(price- lag(price))/lag(price)) %>%
+  dplyr::select(index) %>%
+  rename(Ethereum = index)
+
+doge_index_column <- doge %>%
+  mutate(index = 100*price/price[1],
+         pc_change = 100*(price- lag(price))/lag(price)) %>%
+  dplyr::select(index) %>%
+  rename(Dogecoin = index)
+
+cardano_index_column <- cardano %>%
+  mutate(index = 100*price/price[1],
+         pc_change = 100*(price- lag(price))/lag(price)) %>%
+  dplyr::select(index) %>%
+  rename(Cardano = index)
+
+binancecoin_index_column <- binancecoin %>%
+  mutate(index = 100*price/price[1],
+         pc_change = 100*(price- lag(price))/lag(price)) %>%
+  dplyr::select(index) %>%
+  rename(Binancecoin = index)
+
+
+cryptos_index_list <- cbind(btc_index_column, eth_index_column, doge_index_column, cardano_index_column, binancecoin_index_column, btc$date) %>%
+  drop_na()
+
+sandp_index_column <- sandp_hist_prices %>%
+  mutate(index = 100*close/close[1],
+           pc_change = 100*(close- lag(close))/lag(close)) %>%
+  dplyr::select(index,date) %>%
+  rename(`S & P 500` = index)
+
+dowjones_index_column <- dji_hist_prices %>%
+  mutate(index = 100*close/close[1],
+           pc_change = 100*(close- lag(close))/lag(close)) %>%
+  dplyr::select(index,date) %>%
+  rename(`Dow Jones` = index)
+
+stocks_index_list <- left_join(sandp_index_column, dowjones_index_column)
+
+cryptos_stocks_index_list <- left_join(cryptos_index_list, stocks_index_list, by = c("btc$date" = "date"))
+
+
+
+corr_cryptos_stocks_index <- cryptos_stocks_index_list %>%
+  dplyr::select(-`btc$date`) %>% 
+  drop_na() %>% 
+  cor()
+
+
+corr_cryptos_stocks_index <- round(corr_cryptos_stocks_index, 3)
+
+# Following Code was copied from the example found here:
+# http://www.sthda.com/english/wiki/ggplot2-quick-correlation-matrix-heatmap-r-software-and-data-visualization
+
+#cormat <-corr_cryptos_pchange
+
+cormat <- corr_cryptos_stocks_index
+
+melted_corr_cryptos_stocks <- melt(corr_cryptos_stocks_index)
+
+melted_cormat <- melted_corr_cryptos
+
+# Get lower triangle of the correlation matrix
+  get_lower_tri<-function(cormat){
+    cormat[upper.tri(cormat)] <- NA
+    return(cormat)
+  }
+  # Get upper triangle of the correlation matrix
+  get_upper_tri <- function(cormat){
+    cormat[lower.tri(cormat)]<- NA
+    return(cormat)
+  }
+  
+reorder_cormat <- function(cormat){
+# Use correlation between variables as distance
+dd <- as.dist((1-cormat)/2)
+hc <- hclust(dd)
+cormat <-cormat[hc$order, hc$order]
+}
+  
+  
+# Reorder the correlation matrix
+cormat <- reorder_cormat(cormat)
+upper_tri <- get_upper_tri(cormat)
+# Melt the correlation matrix
+melted_cormat <- melt(upper_tri, na.rm = TRUE)
+# Create a ggheatmap
+ggheatmap_index <- ggplot(melted_cormat, aes(Var2, Var1, fill = value))+
+ geom_tile(color = "white")+
+ scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+   midpoint = 0, limit = c(-1,1), space = "Lab", 
+    name="Pearson\nCorrelation") +
+  theme_minimal()+ # minimal theme
+ theme(axis.text.x = element_text(angle = 45, vjust = 1, 
+    size = 12, hjust = 1))+
+ coord_fixed()
+
+
+index_heatmap <- ggheatmap_index + 
+geom_text(aes(Var2, Var1, label = value), color = "black", size = 4) +
+theme(
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank(),
+  panel.grid.major = element_blank(),
+  panel.border = element_blank(),
+  panel.background = element_blank(),
+  axis.ticks = element_blank(),
+  legend.justification = c(1, 0),
+  legend.position = c(1.25, 0),
+  legend.direction = "vertical")+
+  guides(fill = guide_colorbar(barwidth = 1, barheight = 10,
+                title.position = "top", title.hjust = 0.5))
+
+index_heatmap +labs(title = "Correlation Heatmap: Crypto and Stocks Relative Indices",
+                     subtitle = "Very high values across; Dogecoin lowest of bunch.")
+```
+
+## Twitter
+
+```{r twitter}
+btc_eth_doge_tweets <- rbind(btc_tweets,eth_tweets,doge_tweets)
+
+plot_ly(btc_eth_doge_tweets, x = ~Date, y = ~TweetCount, color = ~symbol) %>% add_lines %>%
+  layout(title = "Cryptocurrency Daily Tweet Frequency",
+         yaxis = list(title = " Daily Tweet Frequency"),
+         margin = 0.01)
+
+
+```
+
+## Twitter Correlation Heatmap
+
+```{r}
+btc_tweets_column <- btc_tweets %>%
+  mutate(pc_TweetCount = 100*(TweetCount- lag(TweetCount))/lag(TweetCount)) %>% 
+  dplyr::select(pc_TweetCount) %>%
+  rename(`Bitcoin Tweets` = pc_TweetCount)
+
+eth_tweets_column <- eth_tweets %>%
+  mutate(pc_TweetCount = 100*(TweetCount- lag(TweetCount))/lag(TweetCount)) %>% 
+  dplyr::select(pc_TweetCount) %>%
+  rename(`Ethereum Tweets` = pc_TweetCount)
+
+doge_tweets_column <- doge_tweets %>%
+  mutate(pc_TweetCount = 100*(TweetCount- lag(TweetCount))/lag(TweetCount)) %>% 
+  dplyr::select(pc_TweetCount) %>%
+  rename(`Dogecoin Tweets` = pc_TweetCount)
+
+# Correlation HeatMap
+
+btc_pchange_column <- btc %>%
+  mutate(index = 100*price/price[1],
+         pc_change = 100*(price- lag(price))/lag(price)) %>% 
+  dplyr::select(pc_change) %>%
+  rename(Bitcoin = pc_change)
+
+eth_pchange_column <- eth %>%
+  mutate(index = 100*price/price[1],
+           pc_change = 100*(price- lag(price))/lag(price)) %>%
+  dplyr::select(pc_change) %>%
+  rename(Ethereum = pc_change)
+
+doge_pchange_column <- doge %>%
+  mutate(index = 100*price/price[1],
+         pc_change = 100*(price- lag(price))/lag(price)) %>%
+  dplyr::select(pc_change) %>%
+  rename(Dogecoin = pc_change)
+
+cryptos_pchange_tweets_list <- cbind(btc_pchange_column, eth_pchange_column, doge_pchange_column,
+                                     btc_tweets_column, eth_tweets_column, doge_tweets_column,
+                                     btc$date) %>%
+  drop_na()
+
+
+sandp_pchange_column <- sandp_hist_prices %>%
+  mutate(index = 100*close/close[1],
+           pc_change = 100*(close- lag(close))/lag(close)) %>%
+  dplyr::select(pc_change,date) %>%
+  rename(`S & P 500` = pc_change)
+
+dowjones_pchange_column <- dji_hist_prices %>%
+  mutate(index = 100*close/close[1],
+           pc_change = 100*(close- lag(close))/lag(close)) %>%
+  dplyr::select(pc_change,date) %>%
+  rename(`Dow Jones` = pc_change)
+
+stocks_pchange_list <- left_join(sandp_pchange_column, dowjones_pchange_column)
+
+#cryptos_stocks_tweets_pchange_list <- left_join(cryptos_pchange_tweets_list, stocks_pchange_list,
+                                                #by = c("btc$date" = "date"))
+
+# IF interesting in studying crypto tweets to S&P and DJI, comment out bottom code and uncomment top one.
+
+cryptos_stocks_tweets_pchange_list <- cryptos_pchange_tweets_list
+
+corr_cryptos_pchange <- cryptos_pchange_list %>%
+  dplyr::select(-`btc$date`) %>% 
+  cor()
+
+corr_cryptos_stocks_tweets_pchange <- cryptos_stocks_tweets_pchange_list %>%
+  dplyr::select(-`btc$date`) %>% 
+  drop_na() %>% 
+  cor()
+
+corr_cryptos_pchange <- round(corr_cryptos_pchange, 3)
+
+corr_cryptos_stocks_tweets_pchange <- round(corr_cryptos_stocks_tweets_pchange, 3)
+
+# Following Code was copied from the example found here:
+# http://www.sthda.com/english/wiki/ggplot2-quick-correlation-matrix-heatmap-r-software-and-data-visualization
+
+#cormat <-corr_cryptos_pchange
+
+cormat <- corr_cryptos_stocks_tweets_pchange
+
+
+melted_corr_cryptos_stocks_tweets <- melt(corr_cryptos_stocks_tweets_pchange)
+
+melted_cormat <- melted_corr_cryptos_stocks_tweets
+
+
+# Get lower triangle of the correlation matrix
+  get_lower_tri<-function(cormat){
+    cormat[upper.tri(cormat)] <- NA
+    return(cormat)
+  }
+  # Get upper triangle of the correlation matrix
+  get_upper_tri <- function(cormat){
+    cormat[lower.tri(cormat)]<- NA
+    return(cormat)
+  }
+  
+reorder_cormat <- function(cormat){
+# Use correlation between variables as distance
+dd <- as.dist((1-cormat)/2)
+hc <- hclust(dd)
+cormat <-cormat[hc$order, hc$order]
+}
+  
+  
+# Reorder the correlation matrix
+cormat <- reorder_cormat(cormat)
+upper_tri <- get_upper_tri(cormat)
+# Melt the correlation matrix
+melted_cormat <- melt(upper_tri, na.rm = TRUE)
+# Create a ggheatmap
+ggheatmap_pchange_tweets <- ggplot(melted_cormat, aes(Var2, Var1, fill = value))+
+ geom_tile(color = "white")+
+ scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+   midpoint = 0, limit = c(-1,1), space = "Lab", 
+    name="Pearson\nCorrelation") +
+  theme_minimal()+ # minimal theme
+ theme(axis.text.x = element_text(angle = 45, vjust = 1, 
+    size = 12, hjust = 1))+
+ coord_fixed()
+
+
+pchange_tweets_heatmap <- ggheatmap_pchange_tweets + 
+geom_text(aes(Var2, Var1, label = value), color = "black", size = 4) +
+theme(
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank(),
+  panel.grid.major = element_blank(),
+  panel.border = element_blank(),
+  panel.background = element_blank(),
+  axis.ticks = element_blank(),
+  legend.justification = c(1, 0),
+  legend.position = c(1.5, 0),
+  legend.direction = "vertical")+
+  guides(fill = guide_colorbar(barwidth = 1, barheight = 10,
+                title.position = "top", title.hjust = 0.5))
+
+pchange_tweets_heatmap +
+  labs(title = "Correlation Heatmap: Tweets vs Daily % Change",
+       subtitle = "No significant correlation apparent.")
+
+```
+
+
+
+## Treemap
+```{r treemap}
+
+#Crypto in Context
+#summarize values for tree map
+CryptoCurrency <- c(crypto_total_value$Cryptocurrency[1:4])
+MarketCap <- c(crypto_total_value$MarketCap[1:4])
+rest <- sum(crypto_total_value$MarketCap, na.rm = FALSE) - sum(MarketCap)
+df1 <- c(CryptoCurrency, 'Other')
+df2 <- c(MarketCap, rest)
+
+df <- data.frame( df1, df2)
+df
+ggplot(df, aes(area = df2, fill = df1, label = df1)) +
+  geom_treemap() +
+  geom_treemap_text(colour = "white",
+                    place = "centre",
+                    size = 11) +
+  scale_fill_brewer(df2, palette = "Purples")
+#change scale to value and not by alphabet
+
+Markets <- c('CryptoCurrency', 'S&P', 'Bonds', 'Gold')
+crypto_market_cap_global = sum(crypto_total_value$MarketCap)
+s_p_market_cap_global = 3829000000 
+bonds_market_cap_global = 11870000
+gold_market_cap_global = 119000000
+df2 <- c(crypto_market_cap_global,
+         s_p_market_cap_global,
+         bonds_market_cap_global,
+         gold_market_cap_global)
+df3 <- data.frame(Markets, df2)
+#please make this better
+ggplot(df3, aes(area = df2, fill = Markets, label = Markets)) +
+  geom_treemap() +
+  geom_treemap_text(colour = "white",
+                    place = "centre",
+                    size = 11) +
+  scale_fill_brewer(df2, palette = "Greens")
+
+
+#S&P marketcap source - Factset(S&P500)
+#Gold marketcap source - https://companiesmarketcap.com/gold/marketcap/#:~:text=Estimated%20Market%20Cap%3A%20%2412.109%20T
+#Bonds marketcap source - International Capital Markets Association
+```
+

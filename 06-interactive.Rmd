@@ -1,3 +1,40 @@
 # Interactive component
 
+The interactive plot component below overlays significant news event in the cryptocurrency world over the stacked line chart by market capitalizations of the five crypto currencies we studied.
+
+As the news was gathered on a per month basis, news warnings will only appear, if they exist on the 1st day of a month when hovering over.
+
+```{r interactiveplot, message=FALSE, warning=FALSE}
+
+news_month <-read_csv("news_by_month.csv") %>%
+  mutate(Date = as_date(mdy(Date)))
+
+
+crypto_news_combined <- combined_cryptos %>% left_join(news_month, by = c("date" = "Date"))
+
+
+
+plot_ly(crypto_news_combined,
+        x = ~date,
+        y = ~market_cap,
+        color = ~coin_id,
+        text = ~News,
+        hovertemplate = paste(
+      "<b>%{text}</b><br><br>",
+      "%{yaxis.title.text}: %{y:%,.0f}<br>",
+      "%{xaxis.title.text}: %{x}<br>",
+      "<extra></extra>"
+      ),
+      stackgroup = "two",
+      groupnorm = "percent") %>% add_lines() %>%
+  layout(title='Cryptocurrency Market Capitalization % and Major News Events',
+     yaxis=list(categoryorder='array', categoryarray=c('bitcoin', 'ethereum', 'binancecoin', 'cardano', 'dogecoin'),
+                title = "Market Capitalization %"),
+     xaxis = list(title = "Date"),
+     margin = 0.02
+     )
+
+
+```
+
 

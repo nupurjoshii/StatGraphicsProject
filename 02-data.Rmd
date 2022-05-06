@@ -8,129 +8,173 @@ Describe any issues / problems with the data, either known or that you discover.
 
 (suggested: approximately 1 page)
 
+## Dataset Overview
+All data collected has been observed and analyzed between 1st January 2020 and 30th April 2022.
 
-The data used for this project will be the historical price data and market capitalizations of Bitcoin, Ethereum and the S & P 500  and Dow Jones Indices over the past 5 years. The data for this is well documented and available via R libraries of tidyquant and coinmarketcapr. 
+**Nota bene: Because cryptocurrency markets do not have set trading hours and do not close for holidays or weekends, we receive daily data from 12am to 11:59pm. The S&P500 and DJI, on the other hand, are only traded Monday through Friday during fixed market hours.**
 
-As these prices are very well documented online, any csv file could have been found and downloaded with similar results. However, obtaining them via pre set up R libraries makes the process much easier and very accessible. 
+## Data Sources:
 
-The data collected here is in the form of quantitative data over time in the form of a time series. We have daily prices, index, volume traded and dates as our different variables. We have decided to restrict our viewing to the last five years worth of data as that is when most of the crypto market boomed and grew. Looking at the last five years worth of data additionally makes it an interesting case study as a lot of world events happened and observing the changes in the different markets will be worth it.
+```{=tex}
+\begin{itemize}
+\item Use a linear kernel. 
+\item Perform cross validation on a grid of values $\epsilon=0.1, 0.2, \cdots, 1$ and cost$=0.1, 0.5, 1, 5, 10, 50, 100$ values ....
+\item What is the loss used in the cross validation (CV)?
+\item Plot the cross validation heat map.
+\item Train a linear kernel support vector regression using the optimal parameters selected using CV.
+\item Compute the train and test error.
+\end{itemize}
+```
+
+### Cryptocurrency Daily Price 
+
+```{=tex}
+\begin{itemize}
+\item Obtained from https://www.investing.com/ in a csv format.
+\item Contains Volume, opening price, high, low for each crypto currency.
+\end{itemize}
+```
 
 
-TO INCLUDE OR NOT:
-"""One avenue we attempted exploring but did not make much headway in was Twitter Sentiment Analysis for the crypto market. Essentially this process involved looking at twitter mentions of Bitcoin/BTC and Ethereum/ETH and trying to associate an increased number of twitter activity with the prices of these cryptocurrencies. This was difficult to explore as the daily tweet numbers we could manage to yield were restricted to 144,000 tweets / 24 hours; while recently the daily mentions exceed a million tweets. Thus, the process of gathering historical data for twitter mentions was mostly fruitless."""
+### S&P500 and Dow Jones Index daily Price and Volume
 
-Problems with Data:
+```{=tex}
+\begin{itemize}
+\item Scraped from NASDAQ using Quandl library. NASDAQ being the official marketplace for financial and economic data,was the most reliable and efficient source. 
+\item Contains Volume, opening price, closing price, high, low for each index
+\end{itemize}
+```
 
-Using the R library of tidyquant for the Dow Jones and S&P 500 worked very smoothly. However,the coinmarketcapr does not help us much as it only gives us current marketcap and price data, while we are interested in the historical view of such data. Hence, focusing on prices for the crypt
 
-ANY PROBLEMS??
+### MarketCap Data of Popular Crypto Currencies
+
+```{=tex}
+\begin{itemize}
+\item Obtained from https://www.coingecko.com/ - using the library geckor.
+\item They were several sources of marketcap data, the most popular being coinmarketcap - however API calls were expensive and not freely available. Coinmarketcap is the one stop source for all crypto data, for paid/premium users. Coingecko is a close alternative but doesnt provide globalmarketcap data. 
+\item Because of the price point, and the necessity of global market capitalization data for our analysis, I manually obtained global market capitalization data from coinmarketcap and rendered it into a csv file - which has been separately uploaded to the git repository.
+\end{itemize}
+```
 
 
-```{r setup, include=FALSE}
-# this prevents package loading message from appearing in the rendered version of your problem set 
-knitr::opts_chunk$set(warning = FALSE, message = FALSE)
-rm(list=ls())
-library(devtools)
-library(twitteR)
-library(tm)
-library(wordcloud)
-library(ggplot2)
-library(fpc)
-library(base64enc)
-library(igraph)
-library("openssl")
-library("httpuv")
 
-#Part 1 - Twitter Data Download
-#Application Details
-options(httr_oauth_cache=T)
-api_key='MZKRdmz4WnrJaNljztrnh0A6Q'
-api_secret='L66Aez4pIjzfUWIbCywpktIYOeuvfP0sMIjxmW8dskje9Kw4O4'
-access_token='31146251-phjrau5Yj6iUVCHGjATMYU9KyTi0WUdI7eqpwuODG'
-access_token_secret='yzw5f8fcfaGx7iOwuzeWS1RM5QwguZUc8cLYQmZuWYA08'
-setup_twitter_oauth(api_key,api_secret,access_token,access_token_secret)
+### Twitter Data
+```{=tex}
+\begin{itemize}
+\item The academicTwitter library is only available upon request to some users and the regular Twitter developer API doesnt provide historical data beyond 7 days. 
+\item We tried scraping mentions on twitter per keyword, but each callback only allowed for 1500 tweets and limited us to 1 million tweets per day - which wouldnt have allowed us to obtain tweet_count by keyword for the last 2 years.
+\item The data was finally obtained by scraping a publicly available graph  on bitinfocharts using python( added separately to git repository ) and the data was rendered into a csv file - which was then used to analyse count of tweets for the keywords - ethereum, dogecoin and bitcoin.
+\end{itemize}
+```
 
-#Fetching tweets of input keywords 
-web3_tweets= searchTwitter('Web3', n=1000,lang = 'en')
-eth_tweets= searchTwitter('Ethereum', n=1000,lang = 'en')
-btc_tweets= searchTwitter('Bitcoin', n=1000,lang = 'en')
 
-web3_tweet_df=twListToDF(web3_tweets)
-eth_tweet_df=twListToDF(eth_tweets)
-btc_tweet_df=twListToDF(btc_tweets)
 
-# Convert char date to correct date format
-#web3
-web3_tweet_df$created <- as.Date(web3_tweet_df$created, format= "%m/%d/%y")
-web3_tweet_df$text <- as.character(web3_tweet_df$text)
-str(web3_tweet_df)
-#eth
-eth_tweet_df$created <- as.Date(eth_tweet_df$created, format= "%m/%d/%y")
-eth_tweet_df$text <- as.character(eth_tweet_df$text)
-str(eth_tweet_df)
-#btc
-btc_tweet_df$created <- as.Date(btc_tweet_df$created, format= "%m/%d/%y")
-btc_tweet_df$text <- as.character(btc_tweet_df$text)
-str(btc_tweet_df)
+```{r library loading,message=FALSE,warning=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(tidyquant)
+library(skimr)
+library(tidyverse)
+library(Quandl)
+library(lubridate)
+library(dplyr)
+library(redav)
+library(plotly)
+library(reshape2)
+library(geckor)
+library(crypto2)
+
+#coinmarketgecko api - https://www.coingecko.com/
+#install.packages("geckor")
+#install.packages("crypto2")
+# install.packages("devtools")
+# install.packages("coinmarketcapr")
+# devtools::install_github("business-science/tidyquant")
+# install.packages("skimr")
+# remotes::install_github("jtr13/redav")
 
 ```
-#Check Non-modified, non-clean data word clouds to get a sense of what people are discussing about
 
+```{r data loading}
 
-```{r setup, include=FALSE}
-# this prevents package loading message from appearing in the rendered version of your problem set 
-knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+#2.1 Daily Price of 3 popular crypto currencies and 2 standard market indices -----------------------
+tq_index("SP500")
+sandp_hist_prices <- tq_get(c("^GSPC"),
+              get = "stock.prices",
+              from   = "2020-01-01",
+              to     = "2022-04-30"
+              )
+dji_hist_prices <- tq_get(c("^DJI"),
+                          get = "stock.prices",
+                          from   = "2020-01-01",
+                          to     = "2022-04-30"
+                          )
+# #historical crypto prices of 2 largest currencies by marketcap
+# eth <- read.csv("https://raw.githubusercontent.com/nupurjoshii/StatGraphicsProject/main/prices_eth.csv", header = TRUE)
+# btc <- read.csv("https://raw.githubusercontent.com/nupurjoshii/StatGraphicsProject/main/prices_btc.csv",header = TRUE)
+# doge <- read.csv("https://raw.githubusercontent.com/nupurjoshii/StatGraphicsProject/main/prices_doge.csv",header = TRUE)
 
+#2.2 MarketCap Data of Popular Crypto Currencies
 
+#checking crypto list and sorting by volume
+list <- crypto_list() %>%
+  arrange(rank)
+#list[order(list$rank , na.last = TRUE)]
+#getting eth marketcap data
+eth_history <- coin_history(coin_id = "ethereum", 
+                            vs_currency = "usd",
+                            days = 1000)
+eth_history$date <- as.Date(eth_history$timestamp,format="%Y/%m/%d")
+eth_v1 = subset(eth_history, select = -c(timestamp))
+eth <- eth_v1 %>% filter(date >= '2020-01-01', date <= '2022-04-30')
+#head(eth)
 
-makeCorpus <- function(text){ #Function for making corpus and cleaning the tweets fetched
-  twitterdf <- do.call("rbind", lapply(text, as.data.frame)) #store the fetched tweets as a data frame
-  twitterdf$text <- sapply(twitterdf$text,function(row) iconv(row, "latin1", "ASCII", sub=""))#Removing emoticons from tweets
-  twitterCorpus <- Corpus(VectorSource(twitterdf$text)) #Creating Corpus
-  toSpace <- content_transformer(function(x, pattern) gsub(pattern, " ", x)) #function to replace a pattern to white space using regex
-  twitterCorpus <- tm_map(twitterCorpus, toSpace, "(RT|via)((?:\\b\\W*@\\w+)+)") #match rt or via
-  twitterCorpus <- tm_map(twitterCorpus, toSpace, "@\\w+") #match @
-  twitterCorpus <- tm_map(twitterCorpus, toSpace, "[ \t]{2,}") #match tabs
-  twitterCorpus <- tm_map(twitterCorpus, toSpace, "[ |\n]{1,}") #match new lines
-  twitterCorpus <- tm_map(twitterCorpus, toSpace, "^ ") #match white space at beginning
-  twitterCorpus <- tm_map(twitterCorpus, toSpace, " $") #match white space at the end
-  twitterCorpus <- tm_map(twitterCorpus, PlainTextDocument)
-  twitterCorpus <- tm_map(twitterCorpus, removeNumbers)
-  twitterCorpus <- tm_map(twitterCorpus, removePunctuation)
-  twitterCorpus <- tm_map(twitterCorpus, toSpace, "http[[:alnum:]]*") #remove url from tweets
-  twitterCorpus <- tm_map(twitterCorpus,removeWords,stopwords("en"))
-  twitterCorpus <- tm_map(twitterCorpus, content_transformer(tolower))
-  return(twitterCorpus)
-}
+#getting btc marketcap data
+btc_history <- coin_history(coin_id = "bitcoin", 
+                            vs_currency = "usd",
+                            days = 1000)
+btc_history$date <- as.Date(btc_history$timestamp,format="%Y/%m/%d")
+btc_v1 = subset(btc_history, select = -c(timestamp))
+btc <- btc_v1 %>% filter(date >= '2020-01-01', date <= '2022-04-30')
+#head(btc)
 
+#getting doge marketcap data
+doge_history <- coin_history(coin_id = "dogecoin", 
+                            vs_currency = "usd",
+                            days = 1000)
+doge_history$date <- as.Date(doge_history$timestamp,format="%Y/%m/%d")
+doge_v1 = subset(doge_history, select = -c(timestamp))
+doge <- doge_v1 %>% filter(date >= '2020-01-01', date <= '2022-04-30')
+#head(doge)
 
-#Wordcloud
-makeWordcloud<-function (getText){ #plotting wordcloud
-  twicorpus<-makeCorpus(getText)
-  myTdm<-TermDocumentMatrix(twicorpus, control=list(wordLengths=c(4,Inf))) #Create TDM
-  matrix<-as.matrix(myTdm)
-  wordFreq <- sort(rowSums(matrix), decreasing=TRUE)#find frequency of words and sorting them in descending
-  set.seed(375) 
-  grayLevels <- gray( (wordFreq+10) / (max(wordFreq)+10) )
-  wordcloud(words=names(wordFreq), freq=wordFreq, min.freq=3, random.order=F,colors=grayLevels)
-}
+#getting cardano marketcap data
+cardano_history <- coin_history(coin_id = "cardano", 
+                             vs_currency = "usd",
+                             days = 1000)
+cardano_history$date <- as.Date(cardano_history$timestamp,format="%Y/%m/%d")
+cardano_v1 = subset(cardano_history, select = -c(timestamp))
+cardano <- cardano_v1 %>% filter(date >= '2020-01-01', date <= '2022-04-30')
+#head(cardano)
 
+#getting binance coin marketcap data
+binancecoin_history <- coin_history(coin_id = "binancecoin", 
+                                vs_currency = "usd",
+                                days = 1000)
+binancecoin_history$date <- as.Date(binancecoin_history$timestamp,format="%Y/%m/%d")
+binancecoin_v1 = subset(binancecoin_history, select = -c(timestamp))
+binancecoin <- binancecoin_v1 %>% filter(date >= '2020-01-01', date <= '2022-04-30')
+#head(binancecoin)
 
+# Look at distribution of twitter crypto mentions per crypto coin
 
+#Twitter Data
+#data scraped from bitinfocharts using python - python code uploaded separately
+btc_tweet_count <- read.csv("https://raw.githubusercontent.com/nupurjoshii/StatGraphicsProject/main/btc_tweets.csv")
+eth_tweet_count <- read.csv("https://raw.githubusercontent.com/nupurjoshii/StatGraphicsProject/main/eth_tweets.csv")
+doge_tweet_count <- read.csv("https://raw.githubusercontent.com/nupurjoshii/StatGraphicsProject/main/doge_tweets.csv")
 
-freqPlot<-function (getText){ #frequency plot of word count
-  twicorpus<-makeCorpus(getText)
-  myTdm<-TermDocumentMatrix(twicorpus, control=list(wordLengths=c(4,Inf)))
-  matrix<-as.matrix(myTdm)
-  termFrequency <- rowSums(matrix)
-  termFrequency <- subset(termFrequency, termFrequency>=10)
-  df <- data.frame(term=names(termFrequency), freq=termFrequency)
-  ggplot(df, aes(x=term, y=freq)) + geom_bar(stat="identity") + coord_flip()
-}
+#Latest Global Market Cap Data as on 30th April 2022
+crypto_total_value <- read.csv("https://raw.githubusercontent.com/nupurjoshii/StatGraphicsProject/main/Crypto_LatestMarketCap.csv")
 
-#freqPlot(web3_tweets)
-makeWordcloud(web3_tweets)
-makeWordcloud(eth_tweets)
-makeWordcloud(btc_tweets)
 ```
 

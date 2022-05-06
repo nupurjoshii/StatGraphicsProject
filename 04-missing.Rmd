@@ -1,3 +1,27 @@
 # Missing values
 
-COrrelation --> missing vals
+Correlation --> missing values
+
+```{r}
+
+#4.2 find NA
+# which variables have NA's and how many NA's
+colSums(is.na(eth))
+eth <- na.omit(eth)
+#empty rows dropped as they have no values in the CSV in either of the columns
+colSums(is.na(btc))
+colSums(is.na(doge))
+colSums(is.na(dji_hist_prices))
+colSums(is.na(sandp_hist_prices))
+colSums(is.na(btc_tweets))
+colSums(is.na(eth_tweets))
+colSums(is.na(doge_tweets))
+
+#check for missing values
+colSums(is.na(btc_tweet_count))
+colSums(is.na(eth_tweet_count))
+colSums(is.na(doge_tweet_count))
+colSums(is.na(sandp_hist_prices))
+
+#no missing values as we are dealing with financial market data
+```
