@@ -1,28 +1,72 @@
 # Results
 
-###Market Capitalization of cryptocurrencies 2020-2022
+## Market Capitalization of Cryptocurrencies 2020-2022
+
 The value of the total cryptocurrency market has risen to more than 1.5 trillion, owing to the meteoric rise of bitcoin, ether, and dogecoin. With a market cap of approximately 67 billion, Dogecoin alone is worth more than 75% of the companies in the S&P 500. Although digital currencies have grown in popularity in recent months, they remain a small part of the global markets for stocks, bonds, and gdp.
 
-### With great returns come great volatility
+```{r treemap}
+
+#Crypto in Context
+#summarize values for tree map
+CryptoCurrency <- c(crypto_total_value$Cryptocurrency[1:4])
+MarketCap <- c(crypto_total_value$MarketCap[1:4])
+rest <- sum(crypto_total_value$MarketCap, na.rm = FALSE) - sum(MarketCap)
+df1 <- c(CryptoCurrency, 'Other')
+df2 <- c(MarketCap, rest)
+
+df <- data.frame( df1, df2)
+ggplot(df, aes(area = df2, fill = df1, label = df1)) +
+  geom_treemap() +
+  geom_treemap_text(colour = "white",
+                    place = "centre",
+                    size = 11) +
+  scale_fill_brewer(df2, palette = "Purples")
+#change scale to value and not by alphabet
+
+Markets <- c('CryptoCurrency', 'S&P', 'Bonds', 'Gold')
+crypto_market_cap_global = sum(crypto_total_value$MarketCap)
+s_p_market_cap_global = 3829000000 
+bonds_market_cap_global = 11870000
+gold_market_cap_global = 119000000
+df2 <- c(crypto_market_cap_global,
+         s_p_market_cap_global,
+         bonds_market_cap_global,
+         gold_market_cap_global)
+df3 <- data.frame(Markets, df2)
+#please make this better
+ggplot(df3, aes(area = df2, fill = Markets, label = Markets)) +
+  geom_treemap() +
+  geom_treemap_text(colour = "white",
+                    place = "centre",
+                    size = 11) +
+  scale_fill_brewer(df2, palette = "Greens")
+
+
+#S&P marketcap source - Factset(S&P500)
+#Gold marketcap source - https://companiesmarketcap.com/gold/marketcap/#:~:text=Estimated%20Market%20Cap%3A%20%2412.109%20T
+#Bonds marketcap source - International Capital Markets Association
+```
+
+The above graphs show the cryptocurrency market share by coin and also the crypto market versus the stock market. There is still a long way to go to close that gap.
+
+## Newer Entrants Are the Top Drivers of Cryptocurrency Growth
+
+We weren't surprised to discover that Bitcoin accounted for most of the growth of the cryptocurrency market in aggregate, but it was surprising to see that Bitcoin has rapidly lost market share to these other cryptocurrencies in recent months. 
+
+Ether accounts for the first leg of that lopsided growth. And though altcoins like Cardano , Binance coin and Dogecoin are often overlooked, their market share has grown substantially over the past months, and we will examine them below.
+
+
+## With great returns come great volatility
+
 Much of the hype surrounding cryptocurrencies has been self-fulfilling. During the pandemic, trading volume increased as a growing number of investors gained access to crypto markets via a variety of platforms. Investors see incredible gains and enter the market, putting additional upward pressure on prices. However, every breathtaking rally has been followed by an equally punishing crash, and cryptocurrencies lack a fundamental anchor like the par value of a bond or the discounted cash flows of a stock.
-Newer Entrants Are the Top Drivers of Cryptocurrency Growth
-We weren't surprised to discover that bitcoin accounted for most of the growth of the cryptocurrency market in aggregate, but it was surprising to see that bitcoin has rapidly lost market share to these other cryptocurrencies in recent months. 
-Ether accounts for the first leg of that lopsided growth. And though altcoins like cardano , binance coin and dogecoin are often overlooked, their market share has grown substantially over the past    months
-Ether has experienced sharp spikes and tumbles in its price as enthusiasts speculated on a wide variety of applications for the ethereum blockchain like NFT.
 
-###The Power of Social Media
-
-The rise of dogecoin has defined the power of memes more than any other move in digital-currency markets. It is a cryptocurrency that was created as a joke but has since risen more than 10,000% by 2021. Dogecoin's total market value soared to more than $80 billion at its peak in 2021. Dogecoin's wild swings should serve as a cautionary note to bitcoin investors as well. While the early supporters of cryptocurrency emphasized its utility as an inflation hedge or a store of value, it has no long-term history as either, and its value is heavily influenced by sentiment and momentum. If sentiment turns against it, the price may fall, and a rising price is bitcoin's most appealing feature to new investors
-
-
-## Crypto Work and Graphs
 
 ```{r crypto_work, warning=FALSE,message=FALSE}
 
 # Price-Trends for Ethereum, Bitcoin and Doge
 
 #ETH Chart
-eth[which.max(eth$price),]
+#eth[which.max(eth$price),]
 eth %>% 
   ggplot( aes(x= date, y= price)) +
   geom_line(color="#69b3a2") +
@@ -30,10 +74,11 @@ eth %>%
   annotate(geom="text", x=as.Date("2021-01-01"), y=4808, 
            label="Ethereum price reached 4.8k$\nat the end of 2021") +
   annotate(geom="point", x=as.Date("2021-11-08"), y=4808, size=8, shape=21, fill="transparent") +
-  theme_ipsum()
+  theme_ipsum() +
+  labs(title = "Ethereum Price Trend")
 
 #Bitcoin Chart
-btc[which.max(btc$price),]
+#btc[which.max(btc$price),]
 btc %>% 
   ggplot( aes(x= date, y= price)) +
   geom_line(color="#69b3a2") +
@@ -41,11 +86,11 @@ btc %>%
   annotate(geom="text", x=as.Date("2020-11-07"), y=67000 ,
            label="Bitcoin price reached 67.5k$\nat the end of 2021") +
   annotate(geom="point", x=as.Date("2021-11-07"), y=67527.9, size=8, shape=21, fill="transparent") +
-  theme_ipsum()
-
+  theme_ipsum() +
+  labs(title = "Bitcoin Price Trend")
 
 #Doge Chart
-doge[which.max(doge$price),]
+#doge[which.max(doge$price),]
 doge %>% 
   ggplot( aes(x= date, y= price)) +
   geom_line(color="#69b3a2") +
@@ -53,14 +98,25 @@ doge %>%
   annotate(geom="text", x=as.Date("2020-08-07"), y=0.69, 
            label="Doge price reached an all time high\non 7th May 2021. \nElon Musk appeared on SNL on 8th May 2021") +
   annotate(geom="point", x=as.Date("2021-05-07"), y=0.69, size=8, shape=21, fill="transparent") +
-  theme_ipsum()
+  theme_ipsum() +
+  labs(title = "Dogecoin Price Trend")
+```
+
+In the three graphs above we can see the price trends of each of the cryptocurrencies individually:
+
+Ether has experienced sharp spikes and tumbles in its price as enthusiasts speculated on a wide variety of applications for the ethereum blockchain like NFT.
+
+Bitcoin's rise and fall seem to be cyclical, but trending upwards.
+
+Doge had a meteoric rise and then nearly as catastrophic a fall but has since stabilized. The main use for it as a coin seems to baffle many investors as it is still mainly up there due to its initial "meme status".
+
+```{r, fig.height = 10, fig.width=10}
 
 combined_cryptos <-rbind(eth,btc,doge,cardano,binancecoin) %>%
-  group_by(coin_id) %>% 
-  mutate(index = 100*price/price[1],
+  group_by(coin_id) %>%
+  dplyr::mutate(index = 100*price/price[1],
          pc_change = 100*(price- lag(price))/lag(price)) %>%
   ungroup()
-  
 
 p1 <-plot_ly(combined_cryptos, x = ~date, y = ~index, color = ~coin_id, title = "Index") %>%
   add_lines() %>%
@@ -82,72 +138,204 @@ subplot(style(p1, showlegend = FALSE),
   layout(title = "Crypto Market Over Time")
 
 # Make Boxplot of Cryptos pc_change --> Distribution of daily percentage change of cryptos
+```
+
+While the above graph shows just how far ahead price wise Bitcoin is, it also emphasizes via the Index and Percentage Change Charts how much Dogecoin flew, while the rest of the coins were much more stable, and much less volatile. We can also examine this via the distribution of the percentage change. This is represented below in a boxplot.
+
+### Percentage Change Distribution: Crypto Market
+
+
+```{r}
 
 plot_ly(combined_cryptos, x = ~pc_change, color = ~coin_id, type = "box") %>%
   layout(title = "Crypto Market:Box Plot Distribution of Daily Percentage Change",
          xaxis = list(title = "Daily Percentage Change"), margin = 0.02)
 
 
-
 ```
-## Stock Graphs
 
-```{r stockgraphs}
-stock_indices <- rbind(dji_hist_prices, sandp_hist_prices) %>%
-  mutate(symbol = if_else(symbol == "^GSPC", "S & P 500", "Dow Jones")) %>%
-  group_by(symbol) %>% 
-  mutate(index = 100*close/close[1],
-         daily_pc_change = 100*(close- lag(close))/lag(close)) %>%
-  ungroup()
+Doge just has an incredible distribution with so many outliers far right. This is mainly due to that sudden boom period that it experienced; much of it can be owed to social media.
 
 
-P1 <-plot_ly(stock_indices, x = ~date, y = ~index, color = ~symbol) %>%
-  add_lines() %>%
-  layout(yaxis = list(title = "Relative Index"))
-# 
-P2 <- plot_ly(stock_indices, x = ~date, y = ~daily_pc_change, color = ~symbol) %>%
-  add_lines() %>%
-  layout(yaxis = list(title = "Daily Percent Change"))
-# 
-P3 <- plot_ly(stock_indices, x = ~date, y = ~close, color = ~symbol) %>% 
-  add_lines() %>%
-  layout(yaxis = list(title = "Index Value"))
+## The Power of Social Media via Twitter
 
-subplot(style(P1, showlegend = FALSE),
-        style(P2, showlegend = FALSE),
-        style(P3, showlegend = TRUE),
-        titleY = TRUE,
-        margin = 0.05) %>%
-  layout(title = "Stock Market Over Time")
+The rise of dogecoin has defined the power of memes more than any other move in digital-currency markets. It is a cryptocurrency that was created as a joke but has since risen more than 10,000% by 2021. Dogecoin's total market value soared to more than $80 billion at its peak in 2021. Dogecoin's wild swings should serve as a cautionary note to bitcoin investors as well. While the early supporters of cryptocurrency emphasized its utility as an inflation hedge or a store of value, it has no long-term history as either, and its value is heavily influenced by sentiment and momentum. If sentiment turns against it, the price may fall, and a rising price is bitcoin's most appealing feature to new investors.
 
-# Make Boxplot of DJI vs SP500 daily pc_change
-
-plot_ly(stock_indices, x = ~daily_pc_change, color = ~symbol, type = "box") %>% 
-  layout(title = "Stock Market: Box Plot Distribution of Daily Percentage Change",
-         xaxis = list(title = "Daily Percentage Change"), margin = 0.02)
-
-#S&P Chart
-
-fig <- sandp_hist_prices %>% plot_ly(x = ~date, type="candlestick",
-                      open = ~sandp_hist_prices$open, close = ~sandp_hist_prices$close,
-                      high = ~sandp_hist_prices$high, low = ~sandp_hist_prices$low) 
-fig <- fig %>% layout(title = "S$P500 Price-Trend")
-
-fig
+We aimed to evaluate or look at this by looking at the frequency of tweets from Twitter.
 
 
-#DJI Chart
 
-fig2 <- dji_hist_prices %>% plot_ly(x = ~date, type="candlestick",
-                                     open = ~dji_hist_prices$open, close = ~dji_hist_prices$close,
-                                     high = ~dji_hist_prices$high, low = ~dji_hist_prices$low) 
-fig2 <- fig2 %>% layout(title = "DJI Price-Trend")
+```{r twitter}
+btc_eth_doge_tweets <- rbind(btc_tweets,eth_tweets,doge_tweets)
 
-fig2
+plot_ly(btc_eth_doge_tweets, x = ~Date, y = ~TweetCount, color = ~symbol) %>% add_lines %>%
+  layout(title = "Cryptocurrency Daily Tweet Frequency",
+         yaxis = list(title = " Daily Tweet Frequency"),
+         margin = 0.01)
+
 
 ```
 
-## Heatmap Price
+Over the past two years we have seen a heavy increase in the number of mentions. Doge has a very large peak which here we can see occurs before the large price peaks. This can be an indication that it takes time for sentiment to gather and develop into action and investment. These mentions could possibly be used as a precursor or a predictor for what next alternative cryptocurrency might gather momentum and boom.
+
+
+## Twitter Correlation Heatmap
+
+Below we examine a correlation heatmap between the % change in tweet frequency and the prices of the three cryptocurrencies of BTC, ETH, and DOGE.
+
+```{r}
+btc_tweets_column <- btc_tweets %>%
+  dplyr::mutate(pc_TweetCount = 100*(TweetCount- lag(TweetCount))/lag(TweetCount)) %>% 
+  dplyr::select(pc_TweetCount) %>%
+  dplyr::rename(`Bitcoin Tweets` = pc_TweetCount)
+
+eth_tweets_column <- eth_tweets %>%
+  dplyr::mutate(pc_TweetCount = 100*(TweetCount- lag(TweetCount))/lag(TweetCount)) %>% 
+  dplyr::select(pc_TweetCount) %>%
+  dplyr::rename(`Ethereum Tweets` = pc_TweetCount)
+
+doge_tweets_column <- doge_tweets %>%
+  dplyr::mutate(pc_TweetCount = 100*(TweetCount- lag(TweetCount))/lag(TweetCount)) %>% 
+  dplyr::select(pc_TweetCount) %>%
+  dplyr::rename(`Dogecoin Tweets` = pc_TweetCount)
+
+# Correlation HeatMap
+
+btc_pchange_column <- btc %>%
+  dplyr::mutate(index = 100*price/price[1],
+         pc_change = 100*(price- lag(price))/lag(price)) %>% 
+  dplyr::select(pc_change) %>%
+  dplyr::rename(Bitcoin = pc_change)
+
+eth_pchange_column <- eth %>%
+  dplyr::mutate(index = 100*price/price[1],
+           pc_change = 100*(price- lag(price))/lag(price)) %>%
+  dplyr::select(pc_change) %>%
+  dplyr::rename(Ethereum = pc_change)
+
+doge_pchange_column <- doge %>%
+  dplyr::mutate(index = 100*price/price[1],
+         pc_change = 100*(price- lag(price))/lag(price)) %>%
+  dplyr::select(pc_change) %>%
+  dplyr::rename(Dogecoin = pc_change)
+
+cryptos_pchange_tweets_list <- cbind(btc_pchange_column, eth_pchange_column, doge_pchange_column,
+                                     btc_tweets_column, eth_tweets_column, doge_tweets_column,
+                                     btc$date) %>%
+  drop_na()
+
+
+sandp_pchange_column <- sandp_hist_prices %>%
+  dplyr::mutate(index = 100*close/close[1],
+           pc_change = 100*(close- lag(close))/lag(close)) %>%
+  dplyr::select(pc_change,date) %>%
+  dplyr::rename(`S & P 500` = pc_change)
+
+dowjones_pchange_column <- dji_hist_prices %>%
+  dplyr::mutate(index = 100*close/close[1],
+           pc_change = 100*(close- lag(close))/lag(close)) %>%
+  dplyr::select(pc_change,date) %>%
+  dplyr::rename(`Dow Jones` = pc_change)
+
+stocks_pchange_list <- left_join(sandp_pchange_column, dowjones_pchange_column)
+
+#cryptos_stocks_tweets_pchange_list <- left_join(cryptos_pchange_tweets_list, stocks_pchange_list,
+                                                #by = c("btc$date" = "date"))
+
+# IF interesting in studying crypto tweets to S&P and DJI, comment out bottom code and uncomment top one.
+
+cryptos_stocks_tweets_pchange_list <- cryptos_pchange_tweets_list
+
+# cryptos_pchange_list <- cbind(btc_pchange_column, eth_pchange_column, doge_pchange_column, cardano_pchange_column, binancecoin_pchange_column, btc$date) %>%
+#   drop_na()
+# 
+# corr_cryptos_pchange <- cryptos_pchange_list %>%
+#   dplyr::select(-`btc$date`) %>% 
+#   cor()
+
+corr_cryptos_stocks_tweets_pchange <- cryptos_stocks_tweets_pchange_list %>%
+  dplyr::select(-`btc$date`) %>% 
+  drop_na() %>% 
+  cor()
+
+#corr_cryptos_pchange <- round(corr_cryptos_pchange, 3)
+
+corr_cryptos_stocks_tweets_pchange <- round(corr_cryptos_stocks_tweets_pchange, 3)
+
+# Following Code was copied from the example found here:
+# http://www.sthda.com/english/wiki/ggplot2-quick-correlation-matrix-heatmap-r-software-and-data-visualization
+
+#cormat <-corr_cryptos_pchange
+
+cormat <- corr_cryptos_stocks_tweets_pchange
+
+
+melted_corr_cryptos_stocks_tweets <- melt(corr_cryptos_stocks_tweets_pchange)
+
+melted_cormat <- melted_corr_cryptos_stocks_tweets
+
+
+# Get lower triangle of the correlation matrix
+  get_lower_tri<-function(cormat){
+    cormat[upper.tri(cormat)] <- NA
+    return(cormat)
+  }
+  # Get upper triangle of the correlation matrix
+  get_upper_tri <- function(cormat){
+    cormat[lower.tri(cormat)]<- NA
+    return(cormat)
+  }
+  
+reorder_cormat <- function(cormat){
+# Use correlation between variables as distance
+dd <- as.dist((1-cormat)/2)
+hc <- hclust(dd)
+cormat <-cormat[hc$order, hc$order]
+}
+  
+  
+# Reorder the correlation matrix
+cormat <- reorder_cormat(cormat)
+upper_tri <- get_upper_tri(cormat)
+# Melt the correlation matrix
+melted_cormat <- melt(upper_tri, na.rm = TRUE)
+# Create a ggheatmap
+ggheatmap_pchange_tweets <- ggplot(melted_cormat, aes(Var2, Var1, fill = value))+
+ geom_tile(color = "white")+
+ scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+   midpoint = 0, limit = c(-1,1), space = "Lab", 
+    name="Pearson\nCorrelation") +
+  theme_minimal()+ # minimal theme
+ theme(axis.text.x = element_text(angle = 45, vjust = 1, 
+    size = 12, hjust = 1))+
+ coord_fixed()
+
+
+pchange_tweets_heatmap <- ggheatmap_pchange_tweets + 
+geom_text(aes(Var2, Var1, label = value), color = "black", size = 4) +
+theme(
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank(),
+  panel.grid.major = element_blank(),
+  panel.border = element_blank(),
+  panel.background = element_blank(),
+  axis.ticks = element_blank(),
+  legend.justification = c(1, 0),
+  legend.position = c(1.3, 0),
+  legend.direction = "vertical")+
+  guides(fill = guide_colorbar(barwidth = 1, barheight = 10,
+                title.position = "top", title.hjust = 0.5))
+
+pchange_tweets_heatmap +
+  labs(title = "Correlation Heatmap: Tweets vs Daily % Change",
+       subtitle = "No significant correlation apparent.")
+
+```
+As observed in the heatmap above, there does not seem to be any strong correlation apparent. This could be due to the fact that we had observed earlier that the hike in tweet frequency volume precedes the price hike and do not occur simultaneously.
+
+We can also observe any correlations, if they exist, between cryptocurrency prices. This is shown in the graphic below.
+
+## Cryptos Price Correlation
 
 ```{r}
 
@@ -155,27 +343,27 @@ fig2
 
 btc_price_column <- btc %>%
   dplyr::select(price) %>%
-  mutate(Bitcoin = price) %>%
+  dplyr::mutate(Bitcoin = price) %>%
   select(Bitcoin)
 
 eth_price_column <- eth %>%
   dplyr::select(price) %>%
-  mutate(Ethereum = price) %>%
+  dplyr::mutate(Ethereum = price) %>%
   select(Ethereum)
 
 doge_price_column <- doge %>%
   dplyr::select(price) %>%
-  mutate(Dogecoin = price) %>%
+  dplyr::mutate(Dogecoin = price) %>%
   select(Dogecoin)
 
 cardano_price_column <- cardano %>%
   dplyr::select(price) %>%
-  mutate(Cardano = price) %>%
+  dplyr::mutate(Cardano = price) %>%
   select(Cardano)
 
 binancecoin_price_column <- binancecoin %>%
   dplyr::select(price) %>%
-  mutate(Binancecoin = price) %>%
+  dplyr::mutate(Binancecoin = price) %>%
   select(Binancecoin)
 
 cryptos_price_list <- cbind(btc_price_column, eth_price_column, doge_price_column, cardano_price_column, binancecoin_price_column, btc$date)
@@ -240,7 +428,7 @@ theme(
   panel.background = element_blank(),
   axis.ticks = element_blank(),
   legend.justification = c(1, 0),
-  legend.position = c(1.5, 0),
+  legend.position = c(1.3, 0),
   legend.direction = "vertical")+
   guides(fill = guide_colorbar(barwidth = 1, barheight = 10,
                 title.position = "top", title.hjust = 0.5))
@@ -250,8 +438,93 @@ price_heatmap + labs(title = "Correlation Heatmap: Cryptocurrency Prices",
 
 
 ```
+As we can see here, the prices are very highly correlated in the cryptocurrency market place. Bitcoin and Dogecoin have a relatively low correlation of 0.721; this could be due to the fact that institutions view one as something stable and one as a joke or  "meme".
 
-## Heatmap Percent Change
+## Stock Market
+
+While the cryptomarket certainly boomed over the course of the pandemic and the last two years, it is equally important to examine that of the stock market as these two avenues are the ones most commonly used as investment areas. It also serves to look at how a tradiitonal market fares against a new and upcoming one.
+
+
+```{r stockgraphs}
+stock_indices <- rbind(dji_hist_prices, sandp_hist_prices) %>%
+  dplyr::mutate(symbol = if_else(symbol == "^GSPC", "S & P 500", "Dow Jones")) %>%
+  group_by(symbol) %>% 
+  dplyr::mutate(index = 100*close/close[1],
+         daily_pc_change = 100*(close- lag(close))/lag(close)) %>%
+  ungroup()
+
+
+P1 <-plot_ly(stock_indices, x = ~date, y = ~index, color = ~symbol) %>%
+  add_lines() %>%
+  layout(yaxis = list(title = "Relative Index"))
+# 
+P2 <- plot_ly(stock_indices, x = ~date, y = ~daily_pc_change, color = ~symbol) %>%
+  add_lines() %>%
+  layout(yaxis = list(title = "Daily Percent Change"))
+# 
+P3 <- plot_ly(stock_indices, x = ~date, y = ~close, color = ~symbol) %>% 
+  add_lines() %>%
+  layout(yaxis = list(title = "Index Value"))
+
+subplot(style(P1, showlegend = FALSE),
+        style(P2, showlegend = FALSE),
+        style(P3, showlegend = TRUE),
+        titleY = TRUE,
+        margin = 0.05) %>%
+  layout(title = "Stock Market Over Time")
+
+```
+The above graphs do not give much insight other than the fact that they are nearly mirroring each other. The graph on the far right is the exception as we thin of that as the Index's Price. However, the Relative Index and Percentage Change graph show nearly indistinguishable plots.
+
+The middle plot shows the volatility range of the Dow Jones and S&P 500. While there was a large spike in the negative and positive directions early on caused by pandemic undertainty and unrest, the fluctuation settled down in the < |5%| range. We can observe this distribution in the Boxplot below.
+
+
+```{r}
+
+# Make Boxplot of DJI vs SP500 daily pc_change
+
+plot_ly(stock_indices, x = ~daily_pc_change, color = ~symbol, type = "box") %>% 
+  layout(title = "Stock Market: Box Plot Distribution of Daily Percentage Change",
+         xaxis = list(title = "Daily Percentage Change"), margin = 0.02)
+
+```
+
+
+The candlestick charts below show the opening and closing price change over time for the S&P 500 Index and the Dow Jones Index. As seen earlier, the trends they follow are extremely similar.
+
+```{r}
+
+#S&P Chart
+
+fig <- sandp_hist_prices %>% plot_ly(x = ~date, type="candlestick",
+                      open = ~sandp_hist_prices$open, close = ~sandp_hist_prices$close,
+                      high = ~sandp_hist_prices$high, low = ~sandp_hist_prices$low) 
+fig <- fig %>% layout(title = "S&P 500 Price Trend",
+                      xaxis = list(title = "Date"))
+
+fig
+
+
+#DJI Chart
+
+fig2 <- dji_hist_prices %>% plot_ly(x = ~date, type="candlestick",
+                                     open = ~dji_hist_prices$open, close = ~dji_hist_prices$close,
+                                     high = ~dji_hist_prices$high, low = ~dji_hist_prices$low) 
+fig2 <- fig2 %>% layout(title = "Dow Jones Price Trend",
+                      xaxis = list(title = "Date"))
+
+
+fig2
+
+```
+
+
+
+## Cryptos and Stocks Correlation
+
+Mapping a correlation heatmap with respect to percentage change can give us an accurate idea of the correlations between these cryptocurrencies and the stock market.
+
+### Percentage Change Heatmap
 ```{r pc-change_heatmap}
 
 # Repeat the Process for PC change
@@ -259,52 +532,57 @@ price_heatmap + labs(title = "Correlation Heatmap: Cryptocurrency Prices",
 # Correlation HeatMap
 
 btc_pchange_column <- btc %>%
-  mutate(index = 100*price/price[1],
+  dplyr::mutate(index = 100*price/price[1],
          pc_change = 100*(price- lag(price))/lag(price)) %>% 
   dplyr::select(pc_change) %>%
-  mutate(Bitcoin = pc_change) %>%
+  dplyr::mutate(Bitcoin = pc_change) %>%
   select(Bitcoin)
 
 eth_pchange_column <- eth %>%
-  mutate(index = 100*price/price[1],
+  dplyr::mutate(index = 100*price/price[1],
            pc_change = 100*(price- lag(price))/lag(price)) %>%
   dplyr::select(pc_change) %>%
-  mutate(Ethereum = pc_change) %>%
+  dplyr::mutate(Ethereum = pc_change) %>%
   select(Ethereum)
 
 doge_pchange_column <- doge %>%
-  mutate(index = 100*price/price[1],
+  dplyr::mutate(index = 100*price/price[1],
          pc_change = 100*(price- lag(price))/lag(price)) %>%
   dplyr::select(pc_change) %>%
-  mutate(Dogecoin = pc_change) %>%
+  dplyr::mutate(Dogecoin = pc_change) %>%
   select(Dogecoin)
 
 cardano_pchange_column <- cardano %>%
-  mutate(index = 100*price/price[1],
+  dplyr::mutate(index = 100*price/price[1],
          pc_change = 100*(price- lag(price))/lag(price)) %>%
   dplyr::select(pc_change) %>%
-  mutate(Cardano = pc_change) %>%
+  dplyr::mutate(Cardano = pc_change) %>%
   select(Cardano)
 
 binancecoin_pchange_column <- binancecoin %>%
-  mutate(index = 100*price/price[1],
+  dplyr::mutate(index = 100*price/price[1],
          pc_change = 100*(price- lag(price))/lag(price)) %>%
   dplyr::select(pc_change) %>%
-  mutate(Binancecoin = pc_change) %>%
+  dplyr::mutate(Binancecoin = pc_change) %>%
   select(Binancecoin)
+
+# cryptos_pchange_list <- cbind(btc_pchange_column, eth_pchange_column, doge_pchange_column, cardano_pchange_column, binancecoin_pchange_column, btc$date) %>%
+#   drop_na()
+# 
+
 
 cryptos_pchange_list <- cbind(btc_pchange_column, eth_pchange_column, doge_pchange_column, cardano_pchange_column, binancecoin_pchange_column, btc$date) %>%
   drop_na()
 
 
 sandp_pchange_column <- sandp_hist_prices %>%
-  mutate(index = 100*close/close[1],
+  dplyr::mutate(index = 100*close/close[1],
            pc_change = 100*(close- lag(close))/lag(close)) %>%
   dplyr::select(pc_change,date) %>%
   dplyr::rename(`S & P 500` = pc_change)
 
 dowjones_pchange_column <- dji_hist_prices %>%
-  mutate(index = 100*close/close[1],
+  dplyr::mutate(index = 100*close/close[1],
            pc_change = 100*(close- lag(close))/lag(close)) %>%
   dplyr::select(pc_change,date) %>%
   dplyr::rename(`Dow Jones` = pc_change)
@@ -386,7 +664,7 @@ theme(
   panel.background = element_blank(),
   axis.ticks = element_blank(),
   legend.justification = c(1, 0),
-  legend.position = c(1.5, 0),
+  legend.position = c(1.3, 0),
   legend.direction = "vertical")+
   guides(fill = guide_colorbar(barwidth = 1, barheight = 10,
                 title.position = "top", title.hjust = 0.5))
@@ -394,8 +672,13 @@ theme(
 pchange_heatmap + labs(title = "Correlation Heatmap:Crypto and Stocks Daily % Change",
                      subtitle = "Dogecoin and Stocks correlation values stick out.")
 ```
+Using % change instead of price quiets down the correlations we saw earlier. Bitcoin and Ethereum are closely linked and have the highest correlation coefficients as they are the crypto market cap leaders. Moreover, Doge is isolated with much smaller values than the rest. Its meme period definitely attributed to this as its percentage change soared, the others did not change nearly as much. 
 
-## Index Heatmap
+We can also confirm what we saw previously in that the Dow Jones and S&P 500 are very much in sync. In addition, the correlation between the stock market representatives and the cryptos are effectively 0, showing no change or relationship with respect to each other.
+
+### Index Heatmap
+
+Another version of our correlation heatmap can be computed by using the concept of a relative index we have used earlier in this chapter.
 
 ```{r index_heatmap}
 
@@ -404,31 +687,31 @@ pchange_heatmap + labs(title = "Correlation Heatmap:Crypto and Stocks Daily % Ch
 # Correlation HeatMap
 
 btc_index_column <- btc %>%
-  mutate(index = 100*price/price[1],
+  dplyr::mutate(index = 100*price/price[1],
          pc_change = 100*(price- lag(price))/lag(price)) %>% 
   dplyr::select(index) %>%
   dplyr::rename(Bitcoin = index)
 
 eth_index_column <- eth %>%
-  mutate(index = 100*price/price[1],
+  dplyr::mutate(index = 100*price/price[1],
            pc_change = 100*(price- lag(price))/lag(price)) %>%
   dplyr::select(index) %>%
   dplyr::rename(Ethereum = index)
 
 doge_index_column <- doge %>%
-  mutate(index = 100*price/price[1],
+  dplyr::mutate(index = 100*price/price[1],
          pc_change = 100*(price- lag(price))/lag(price)) %>%
   dplyr::select(index) %>%
   dplyr::rename(Dogecoin = index)
 
 cardano_index_column <- cardano %>%
-  mutate(index = 100*price/price[1],
+  dplyr::mutate(index = 100*price/price[1],
          pc_change = 100*(price- lag(price))/lag(price)) %>%
   dplyr::select(index) %>%
   dplyr::rename(Cardano = index)
 
 binancecoin_index_column <- binancecoin %>%
-  mutate(index = 100*price/price[1],
+  dplyr::mutate(index = 100*price/price[1],
          pc_change = 100*(price- lag(price))/lag(price)) %>%
   dplyr::select(index) %>%
   dplyr::rename(Binancecoin = index)
@@ -438,13 +721,13 @@ cryptos_index_list <- cbind(btc_index_column, eth_index_column, doge_index_colum
   drop_na()
 
 sandp_index_column <- sandp_hist_prices %>%
-  mutate(index = 100*close/close[1],
+  dplyr::mutate(index = 100*close/close[1],
            pc_change = 100*(close- lag(close))/lag(close)) %>%
   dplyr::select(index,date) %>%
   dplyr::rename(`S & P 500` = index)
 
 dowjones_index_column <- dji_hist_prices %>%
-  mutate(index = 100*close/close[1],
+  dplyr::mutate(index = 100*close/close[1],
            pc_change = 100*(close- lag(close))/lag(close)) %>%
   dplyr::select(index,date) %>%
   dplyr::rename(`Dow Jones` = index)
@@ -528,212 +811,10 @@ theme(
 index_heatmap +labs(title = "Correlation Heatmap: Crypto and Stocks Relative Indices",
                      subtitle = "Very high values across; Dogecoin lowest of bunch.")
 ```
-
-## Twitter
-
-```{r twitter}
-btc_eth_doge_tweets <- rbind(btc_tweets,eth_tweets,doge_tweets)
-
-plot_ly(btc_eth_doge_tweets, x = ~Date, y = ~TweetCount, color = ~symbol) %>% add_lines %>%
-  layout(title = "Cryptocurrency Daily Tweet Frequency",
-         yaxis = list(title = " Daily Tweet Frequency"),
-         margin = 0.01)
-
-
-```
-
-## Twitter Correlation Heatmap
-
-```{r}
-btc_tweets_column <- btc_tweets %>%
-  mutate(pc_TweetCount = 100*(TweetCount- lag(TweetCount))/lag(TweetCount)) %>% 
-  dplyr::select(pc_TweetCount) %>%
-  dplyr::rename(`Bitcoin Tweets` = pc_TweetCount)
-
-eth_tweets_column <- eth_tweets %>%
-  mutate(pc_TweetCount = 100*(TweetCount- lag(TweetCount))/lag(TweetCount)) %>% 
-  dplyr::select(pc_TweetCount) %>%
-  dplyr::rename(`Ethereum Tweets` = pc_TweetCount)
-
-doge_tweets_column <- doge_tweets %>%
-  mutate(pc_TweetCount = 100*(TweetCount- lag(TweetCount))/lag(TweetCount)) %>% 
-  dplyr::select(pc_TweetCount) %>%
-  dplyr::rename(`Dogecoin Tweets` = pc_TweetCount)
-
-# Correlation HeatMap
-
-btc_pchange_column <- btc %>%
-  mutate(index = 100*price/price[1],
-         pc_change = 100*(price- lag(price))/lag(price)) %>% 
-  dplyr::select(pc_change) %>%
-  dplyr::rename(Bitcoin = pc_change)
-
-eth_pchange_column <- eth %>%
-  mutate(index = 100*price/price[1],
-           pc_change = 100*(price- lag(price))/lag(price)) %>%
-  dplyr::select(pc_change) %>%
-  dplyr::rename(Ethereum = pc_change)
-
-doge_pchange_column <- doge %>%
-  mutate(index = 100*price/price[1],
-         pc_change = 100*(price- lag(price))/lag(price)) %>%
-  dplyr::select(pc_change) %>%
-  dplyr::rename(Dogecoin = pc_change)
-
-cryptos_pchange_tweets_list <- cbind(btc_pchange_column, eth_pchange_column, doge_pchange_column,
-                                     btc_tweets_column, eth_tweets_column, doge_tweets_column,
-                                     btc$date) %>%
-  drop_na()
-
-
-sandp_pchange_column <- sandp_hist_prices %>%
-  mutate(index = 100*close/close[1],
-           pc_change = 100*(close- lag(close))/lag(close)) %>%
-  dplyr::select(pc_change,date) %>%
-  dplyr::rename(`S & P 500` = pc_change)
-
-dowjones_pchange_column <- dji_hist_prices %>%
-  mutate(index = 100*close/close[1],
-           pc_change = 100*(close- lag(close))/lag(close)) %>%
-  dplyr::select(pc_change,date) %>%
-  dplyr::rename(`Dow Jones` = pc_change)
-
-stocks_pchange_list <- left_join(sandp_pchange_column, dowjones_pchange_column)
-
-#cryptos_stocks_tweets_pchange_list <- left_join(cryptos_pchange_tweets_list, stocks_pchange_list,
-                                                #by = c("btc$date" = "date"))
-
-# IF interesting in studying crypto tweets to S&P and DJI, comment out bottom code and uncomment top one.
-
-cryptos_stocks_tweets_pchange_list <- cryptos_pchange_tweets_list
-
-corr_cryptos_pchange <- cryptos_pchange_list %>%
-  dplyr::select(-`btc$date`) %>% 
-  cor()
-
-corr_cryptos_stocks_tweets_pchange <- cryptos_stocks_tweets_pchange_list %>%
-  dplyr::select(-`btc$date`) %>% 
-  drop_na() %>% 
-  cor()
-
-corr_cryptos_pchange <- round(corr_cryptos_pchange, 3)
-
-corr_cryptos_stocks_tweets_pchange <- round(corr_cryptos_stocks_tweets_pchange, 3)
-
-# Following Code was copied from the example found here:
-# http://www.sthda.com/english/wiki/ggplot2-quick-correlation-matrix-heatmap-r-software-and-data-visualization
-
-#cormat <-corr_cryptos_pchange
-
-cormat <- corr_cryptos_stocks_tweets_pchange
-
-
-melted_corr_cryptos_stocks_tweets <- melt(corr_cryptos_stocks_tweets_pchange)
-
-melted_cormat <- melted_corr_cryptos_stocks_tweets
-
-
-# Get lower triangle of the correlation matrix
-  get_lower_tri<-function(cormat){
-    cormat[upper.tri(cormat)] <- NA
-    return(cormat)
-  }
-  # Get upper triangle of the correlation matrix
-  get_upper_tri <- function(cormat){
-    cormat[lower.tri(cormat)]<- NA
-    return(cormat)
-  }
-  
-reorder_cormat <- function(cormat){
-# Use correlation between variables as distance
-dd <- as.dist((1-cormat)/2)
-hc <- hclust(dd)
-cormat <-cormat[hc$order, hc$order]
-}
-  
-  
-# Reorder the correlation matrix
-cormat <- reorder_cormat(cormat)
-upper_tri <- get_upper_tri(cormat)
-# Melt the correlation matrix
-melted_cormat <- melt(upper_tri, na.rm = TRUE)
-# Create a ggheatmap
-ggheatmap_pchange_tweets <- ggplot(melted_cormat, aes(Var2, Var1, fill = value))+
- geom_tile(color = "white")+
- scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
-   midpoint = 0, limit = c(-1,1), space = "Lab", 
-    name="Pearson\nCorrelation") +
-  theme_minimal()+ # minimal theme
- theme(axis.text.x = element_text(angle = 45, vjust = 1, 
-    size = 12, hjust = 1))+
- coord_fixed()
-
-
-pchange_tweets_heatmap <- ggheatmap_pchange_tweets + 
-geom_text(aes(Var2, Var1, label = value), color = "black", size = 4) +
-theme(
-  axis.title.x = element_blank(),
-  axis.title.y = element_blank(),
-  panel.grid.major = element_blank(),
-  panel.border = element_blank(),
-  panel.background = element_blank(),
-  axis.ticks = element_blank(),
-  legend.justification = c(1, 0),
-  legend.position = c(1.5, 0),
-  legend.direction = "vertical")+
-  guides(fill = guide_colorbar(barwidth = 1, barheight = 10,
-                title.position = "top", title.hjust = 0.5))
-
-pchange_tweets_heatmap +
-  labs(title = "Correlation Heatmap: Tweets vs Daily % Change",
-       subtitle = "No significant correlation apparent.")
-
-```
+The Index version is useful because it essentially shows us a return over time from the beginning of our data, instead of a daily % change. This shows that there is a high degree of correlation between both the stock market and the crypto market. This could mean many things such as equilibrium over time and increased acceptance of the crypto market like the stock market. 
 
 
 
-## Treemap
-```{r treemap}
-
-#Crypto in Context
-#summarize values for tree map
-CryptoCurrency <- c(crypto_total_value$Cryptocurrency[1:4])
-MarketCap <- c(crypto_total_value$MarketCap[1:4])
-rest <- sum(crypto_total_value$MarketCap, na.rm = FALSE) - sum(MarketCap)
-df1 <- c(CryptoCurrency, 'Other')
-df2 <- c(MarketCap, rest)
-
-df <- data.frame( df1, df2)
-df
-ggplot(df, aes(area = df2, fill = df1, label = df1)) +
-  geom_treemap() +
-  geom_treemap_text(colour = "white",
-                    place = "centre",
-                    size = 11) +
-  scale_fill_brewer(df2, palette = "Purples")
-#change scale to value and not by alphabet
-
-Markets <- c('CryptoCurrency', 'S&P', 'Bonds', 'Gold')
-crypto_market_cap_global = sum(crypto_total_value$MarketCap)
-s_p_market_cap_global = 3829000000 
-bonds_market_cap_global = 11870000
-gold_market_cap_global = 119000000
-df2 <- c(crypto_market_cap_global,
-         s_p_market_cap_global,
-         bonds_market_cap_global,
-         gold_market_cap_global)
-df3 <- data.frame(Markets, df2)
-#please make this better
-ggplot(df3, aes(area = df2, fill = Markets, label = Markets)) +
-  geom_treemap() +
-  geom_treemap_text(colour = "white",
-                    place = "centre",
-                    size = 11) +
-  scale_fill_brewer(df2, palette = "Greens")
 
 
-#S&P marketcap source - Factset(S&P500)
-#Gold marketcap source - https://companiesmarketcap.com/gold/marketcap/#:~:text=Estimated%20Market%20Cap%3A%20%2412.109%20T
-#Bonds marketcap source - International Capital Markets Association
-```
 

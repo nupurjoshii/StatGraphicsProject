@@ -1,10 +1,13 @@
 # Missing values
 
-Our data that we loaded did not have missing values.
+Nearly all the data that we loaded did not have missing values.
 
 When comparing the Dow Jones Index and the S&P 500 to that of the cryptocurrency prices, there are some days on which there are no price values. This is due to the market not being open. This however does not effect the price of the DJI or SP500 on those days as it just continues on the next open market day from where it had stopped. The large amount of data points make it such that these "missing points" are not visible.
 
-Moreover, when computing the correlation heatmap these data points proved to be an issue, so we had to get rid of them. 
+Moreover, when computing the correlation heatmap these data points proved to be an issue, so we had to get rid of them.
+
+In our Interactive Plot Section, we have News data forselect months, but because of the data format it is set to the beginning of that month. Thus, there are many NA values because there is nothing to report.
+
 ```{r}
 
 #4.2 find NA

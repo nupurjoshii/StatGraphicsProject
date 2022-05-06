@@ -2,7 +2,7 @@
 
 The interactive plot component below overlays significant news event in the cryptocurrency world over the stacked line chart by market capitalizations of the five crypto currencies we studied.
 
-As the news was gathered on a per month basis, news warnings will only appear, if they exist on the 1st day of a month when hovering over.
+As the news was gathered on a per month basis, news warnings will only appear, if they exist, on the 1st day of a month when hovering over that area. The market capitilization % data here is as a percentage of the five currencies in the graph, not as a % of the total cryptocurrencies in circulation as that data was hard to obtain historical data for.
 
 ```{r interactiveplot, message=FALSE, warning=FALSE}
 
@@ -36,5 +36,5 @@ plot_ly(crypto_news_combined,
 
 
 ```
-
+While we know Bitcoin has been the most dominant cryptocurrency over these years, it is apparent in this graph how its % market capitalization has decreased. While the so called "smaller coins" have gained more market cap. The sections of Doge, Cardano and Binancecoin grew larger as the orange and green Bitcoin and Ethereum sections grew smaller over these past two years; these changes were not very significant, but definetely quite noticeable.
 

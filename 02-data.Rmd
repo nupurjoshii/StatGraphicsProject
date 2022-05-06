@@ -1,26 +1,18 @@
 # Data sources
 
-Describe the data sources: who is responsible for collecting the data? How is it collected? If there were a choice of options, explain how you chose.
-
-Provide some basic information about the dataset: types of variables, number of records, etc.
-
-Describe any issues / problems with the data, either known or that you discover.
-
-(suggested: approximately 1 page)
-
 ## Dataset Overview
 All data collected has been observed and analyzed between 1st January 2020 and 30th April 2022.
 
 **Nota bene: Because cryptocurrency markets do not have set trading hours and do not close for holidays or weekends, we receive daily data from 12am to 11:59pm. The S&P500 and DJI, on the other hand, are only traded Monday through Friday during fixed market hours.**
 
-## Data Sources:
+## Data Sources
 
 
 ### Cryptocurrency Daily Price 
 
 Obtained from https://www.investing.com/ in a csv format.
-Contains Volume, opening price, high, low for each crypto currency.
 
+Contains Volume, opening price, high, low for each crypto currency.
 
 
 

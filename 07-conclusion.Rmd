@@ -3,6 +3,7 @@
 ## What We Expect for the Future of Cryptocurrency:
 
 With a market capitalization of $1.7 trillion, cryptocurrencies can no longer be ignored. The asset class's rapid growth necessitates both caution and optimism.
+
 Despite the fact that cryptocurrency has spawned entire parallel economies in less than 15 years, there are still significant barriers to real-world use cases. In other words, cryptocurrencies are still a young and highly concentrated investment opportunity. Integration with existing systems in financial services and other industries, rather than a rapid takeover, is likely to determine future adoption rates in the space. If that path is followed, investment opportunities will grow at a rate that is only matched by the potential risks.
 
 
@@ -12,6 +13,6 @@ Some more insights that need to be explored and could prove immensely useful in 
 
   - The correlation between crypto-price returns with international developed-markets stocks and how would this correlation be impacted in periods of market stress when liquidity compresses. 
   
-  - Bitcoin Hailed as "digital gold” as its fixed supply and decentralized nature have attracted attention from those who believe that it could act as a viable competitor to the bars by doomsday preppers. - but it would be interesting to plot it out and see if this claim hold any intellectual merit
+  - Bitcoin Hailed as "digital gold” as its fixed supply and decentralized nature have attracted attention from those who believe that it could act as a viable competitor to the bars by doomsday preppers. - but it would be interesting to plot it out and see if this claim holds any intellectual merit.
 
 

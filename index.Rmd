@@ -1,7 +1,7 @@
 --- 
-title: "Crypto vs Stock Market"
+title: "Exploratory Data Analysis of Cryptocurrencies and their Meteoric Rise"
 author: "Nupur Joshi, Fahad Alhkaja"
-date: "`r Sys.Date()`"
+date: "05/05/2022"
 site: bookdown::bookdown_site
 ---
 
