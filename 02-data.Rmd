@@ -1,5 +1,31 @@
 # Data sources
 
+Describe the data sources: who is responsible for collecting the data? How is it collected? If there were a choice of options, explain how you chose.
+
+Provide some basic information about the dataset: types of variables, number of records, etc.
+
+Describe any issues / problems with the data, either known or that you discover.
+
+(suggested: approximately 1 page)
+
+
+The data used for this project will be the historical price data and market capitalizations of Bitcoin, Ethereum and the S & P 500  and Dow Jones Indices over the past 5 years. The data for this is well documented and available via R libraries of tidyquant and coinmarketcapr. 
+
+As these prices are very well documented online, any csv file could have been found and downloaded with similar results. However, obtaining them via pre set up R libraries makes the process much easier and very accessible. 
+
+The data collected here is in the form of quantitative data over time in the form of a time series. We have daily prices, index, volume traded and dates as our different variables. We have decided to restrict our viewing to the last five years worth of data as that is when most of the crypto market boomed and grew. Looking at the last five years worth of data additionally makes it an interesting case study as a lot of world events happened and observing the changes in the different markets will be worth it.
+
+
+TO INCLUDE OR NOT:
+"""One avenue we attempted exploring but did not make much headway in was Twitter Sentiment Analysis for the crypto market. Essentially this process involved looking at twitter mentions of Bitcoin/BTC and Ethereum/ETH and trying to associate an increased number of twitter activity with the prices of these cryptocurrencies. This was difficult to explore as the daily tweet numbers we could manage to yield were restricted to 144,000 tweets / 24 hours; while recently the daily mentions exceed a million tweets. Thus, the process of gathering historical data for twitter mentions was mostly fruitless."""
+
+Problems with Data:
+
+Using the R library of tidyquant for the Dow Jones and S&P 500 worked very smoothly. However,the coinmarketcapr does not help us much as it only gives us current marketcap and price data, while we are interested in the historical view of such data. Hence, focusing on prices for the crypt
+
+ANY PROBLEMS??
+
+
 ```{r setup, include=FALSE}
 # this prevents package loading message from appearing in the rendered version of your problem set 
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
