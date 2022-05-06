@@ -1,15 +1,14 @@
-Objective : How has the conversation around cryptocurrencies (crypto) changed over the past 4 years (via Twitter data) - and is that conversation impacting market cap? 
+Cryptocurrencies such as Bitcoin, Ethereum, and even Dogecoin have evolved significantly from mere curiosity to a punchline to viable investment, making them nearly impossible to ignore. 
+These cryptocurrencies are powered by the underlying technology of blockchains, which register every transaction and cannot be altered. Different blockchains support different kinds of cryptocurrencies: Bitcoin, for instance, lives on the bitcoin blockchain; ether exists on the ethereum blockchain.  
 
-Sub Goals:
-1. General sentiment around crypto ( ( positive, negative, neutral? ) and its evolution over time.
+Many leading investors hate cryptocurrency; Warren Buffett has called bitcoin "rat poison squared." Others, including hedge-fund manager Paul Tudor Jones, have climbed aboard. 
 
-2. Are people's opinions more subjective (emotional? ) or objective? ( neutral, facts )
+It's challenging for a casual observer or a "normie" to disentangle the hype from any true potential. Yet, it's also difficult to shake that feeling: Are digital tokens worthy of a spot in my portfolio? Is it even possible for them to be a viable asset class?
 
-3. Sentiment analysis in response to every announcement ( positive, negative, neutral? )
+We wanted to find out - what is driving this massive momentum in cryptocurrencies now and how does it compare to the global markets?
 
-4. Is twitter sentiment consistent with price changes? 
+The purpose of this project is to conduct an exploratory analysis of cryptocurrency price trends, trading volume, and the influence of social media and cryptocurrency-related conversations on the market capitalization of these prices. Additionally, we wish to compare cryptocurrency as an asset class to the global stock, bond, and gold markets.
 
-5. Any correlation between tweet volume to price changes? Is tweeting volume high/low before price drops/rises? Does it matter who tweets and what they tweet (ie are there market movers by their tweets eg. Elon Musk)?
 
 *This repo was initially generated from a bookdown template available here: https://github.com/jtr13/EDAVtemplate.*	
 
