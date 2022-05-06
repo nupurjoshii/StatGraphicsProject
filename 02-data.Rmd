@@ -78,11 +78,23 @@ library(tidyverse)
 library(Quandl)
 library(lubridate)
 library(dplyr)
+library(ggplot2)
 library(redav)
 library(plotly)
 library(reshape2)
 library(geckor)
 library(crypto2)
+library(hrbrthemes)
+#library("imputeTS")
+library(coinmarketcapr)
+library(hrbrthemes)
+library(plyr)
+library(treemap)
+library(treemapify)
+
+
+
+
 
 #coinmarketgecko api - https://www.coingecko.com/
 #install.packages("geckor")

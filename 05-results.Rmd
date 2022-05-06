@@ -142,23 +142,28 @@ fig2
 
 btc_price_column <- btc %>%
   dplyr::select(price) %>%
-  rename(Bitcoin = price)
+  mutate(Bitcoin = price) %>%
+  select(Bitcoin)
 
 eth_price_column <- eth %>%
   dplyr::select(price) %>%
-  rename(Ethereum = price)
+  mutate(Ethereum = price) %>%
+  select(Ethereum)
 
 doge_price_column <- doge %>%
   dplyr::select(price) %>%
-  rename(Dogecoin = price)
+  mutate(Dogecoin = price) %>%
+  select(Dogecoin)
 
 cardano_price_column <- cardano %>%
   dplyr::select(price) %>%
-  rename(Cardano = price)
+  mutate(Cardano = price) %>%
+  select(Cardano)
 
 binancecoin_price_column <- binancecoin %>%
   dplyr::select(price) %>%
-  rename(Binancecoin = price)
+  mutate(Binancecoin = price) %>%
+  select(Binancecoin)
 
 cryptos_price_list <- cbind(btc_price_column, eth_price_column, doge_price_column, cardano_price_column, binancecoin_price_column, btc$date)
 
@@ -244,31 +249,36 @@ btc_pchange_column <- btc %>%
   mutate(index = 100*price/price[1],
          pc_change = 100*(price- lag(price))/lag(price)) %>% 
   dplyr::select(pc_change) %>%
-  rename(Bitcoin = pc_change)
+  mutate(Bitcoin = pc_change) %>%
+  select(Bitcoin)
 
 eth_pchange_column <- eth %>%
   mutate(index = 100*price/price[1],
            pc_change = 100*(price- lag(price))/lag(price)) %>%
   dplyr::select(pc_change) %>%
-  rename(Ethereum = pc_change)
+  mutate(Ethereum = pc_change) %>%
+  select(Ethereum)
 
 doge_pchange_column <- doge %>%
   mutate(index = 100*price/price[1],
          pc_change = 100*(price- lag(price))/lag(price)) %>%
   dplyr::select(pc_change) %>%
-  rename(Dogecoin = pc_change)
+  mutate(Dogecoin = pc_change) %>%
+  select(Dogecoin)
 
 cardano_pchange_column <- cardano %>%
   mutate(index = 100*price/price[1],
          pc_change = 100*(price- lag(price))/lag(price)) %>%
   dplyr::select(pc_change) %>%
-  rename(Cardano = pc_change)
+  mutate(Cardano = pc_change) %>%
+  select(Cardano)
 
 binancecoin_pchange_column <- binancecoin %>%
   mutate(index = 100*price/price[1],
          pc_change = 100*(price- lag(price))/lag(price)) %>%
   dplyr::select(pc_change) %>%
-  rename(Binancecoin = pc_change)
+  mutate(Binancecoin = pc_change) %>%
+  select(Binancecoin)
 
 cryptos_pchange_list <- cbind(btc_pchange_column, eth_pchange_column, doge_pchange_column, cardano_pchange_column, binancecoin_pchange_column, btc$date) %>%
   drop_na()
@@ -278,13 +288,13 @@ sandp_pchange_column <- sandp_hist_prices %>%
   mutate(index = 100*close/close[1],
            pc_change = 100*(close- lag(close))/lag(close)) %>%
   dplyr::select(pc_change,date) %>%
-  rename(`S & P 500` = pc_change)
+  dplyr::rename(`S & P 500` = pc_change)
 
 dowjones_pchange_column <- dji_hist_prices %>%
   mutate(index = 100*close/close[1],
            pc_change = 100*(close- lag(close))/lag(close)) %>%
   dplyr::select(pc_change,date) %>%
-  rename(`Dow Jones` = pc_change)
+  dplyr::rename(`Dow Jones` = pc_change)
 
 stocks_pchange_list <- left_join(sandp_pchange_column, dowjones_pchange_column)
 
@@ -384,31 +394,31 @@ btc_index_column <- btc %>%
   mutate(index = 100*price/price[1],
          pc_change = 100*(price- lag(price))/lag(price)) %>% 
   dplyr::select(index) %>%
-  rename(Bitcoin = index)
+  dplyr::rename(Bitcoin = index)
 
 eth_index_column <- eth %>%
   mutate(index = 100*price/price[1],
            pc_change = 100*(price- lag(price))/lag(price)) %>%
   dplyr::select(index) %>%
-  rename(Ethereum = index)
+  dplyr::rename(Ethereum = index)
 
 doge_index_column <- doge %>%
   mutate(index = 100*price/price[1],
          pc_change = 100*(price- lag(price))/lag(price)) %>%
   dplyr::select(index) %>%
-  rename(Dogecoin = index)
+  dplyr::rename(Dogecoin = index)
 
 cardano_index_column <- cardano %>%
   mutate(index = 100*price/price[1],
          pc_change = 100*(price- lag(price))/lag(price)) %>%
   dplyr::select(index) %>%
-  rename(Cardano = index)
+  dplyr::rename(Cardano = index)
 
 binancecoin_index_column <- binancecoin %>%
   mutate(index = 100*price/price[1],
          pc_change = 100*(price- lag(price))/lag(price)) %>%
   dplyr::select(index) %>%
-  rename(Binancecoin = index)
+  dplyr::rename(Binancecoin = index)
 
 
 cryptos_index_list <- cbind(btc_index_column, eth_index_column, doge_index_column, cardano_index_column, binancecoin_index_column, btc$date) %>%
@@ -418,13 +428,13 @@ sandp_index_column <- sandp_hist_prices %>%
   mutate(index = 100*close/close[1],
            pc_change = 100*(close- lag(close))/lag(close)) %>%
   dplyr::select(index,date) %>%
-  rename(`S & P 500` = index)
+  dplyr::rename(`S & P 500` = index)
 
 dowjones_index_column <- dji_hist_prices %>%
   mutate(index = 100*close/close[1],
            pc_change = 100*(close- lag(close))/lag(close)) %>%
   dplyr::select(index,date) %>%
-  rename(`Dow Jones` = index)
+  dplyr::rename(`Dow Jones` = index)
 
 stocks_index_list <- left_join(sandp_index_column, dowjones_index_column)
 
@@ -525,17 +535,17 @@ plot_ly(btc_eth_doge_tweets, x = ~Date, y = ~TweetCount, color = ~symbol) %>% ad
 btc_tweets_column <- btc_tweets %>%
   mutate(pc_TweetCount = 100*(TweetCount- lag(TweetCount))/lag(TweetCount)) %>% 
   dplyr::select(pc_TweetCount) %>%
-  rename(`Bitcoin Tweets` = pc_TweetCount)
+  dplyr::rename(`Bitcoin Tweets` = pc_TweetCount)
 
 eth_tweets_column <- eth_tweets %>%
   mutate(pc_TweetCount = 100*(TweetCount- lag(TweetCount))/lag(TweetCount)) %>% 
   dplyr::select(pc_TweetCount) %>%
-  rename(`Ethereum Tweets` = pc_TweetCount)
+  dplyr::rename(`Ethereum Tweets` = pc_TweetCount)
 
 doge_tweets_column <- doge_tweets %>%
   mutate(pc_TweetCount = 100*(TweetCount- lag(TweetCount))/lag(TweetCount)) %>% 
   dplyr::select(pc_TweetCount) %>%
-  rename(`Dogecoin Tweets` = pc_TweetCount)
+  dplyr::rename(`Dogecoin Tweets` = pc_TweetCount)
 
 # Correlation HeatMap
 
@@ -543,19 +553,19 @@ btc_pchange_column <- btc %>%
   mutate(index = 100*price/price[1],
          pc_change = 100*(price- lag(price))/lag(price)) %>% 
   dplyr::select(pc_change) %>%
-  rename(Bitcoin = pc_change)
+  dplyr::rename(Bitcoin = pc_change)
 
 eth_pchange_column <- eth %>%
   mutate(index = 100*price/price[1],
            pc_change = 100*(price- lag(price))/lag(price)) %>%
   dplyr::select(pc_change) %>%
-  rename(Ethereum = pc_change)
+  dplyr::rename(Ethereum = pc_change)
 
 doge_pchange_column <- doge %>%
   mutate(index = 100*price/price[1],
          pc_change = 100*(price- lag(price))/lag(price)) %>%
   dplyr::select(pc_change) %>%
-  rename(Dogecoin = pc_change)
+  dplyr::rename(Dogecoin = pc_change)
 
 cryptos_pchange_tweets_list <- cbind(btc_pchange_column, eth_pchange_column, doge_pchange_column,
                                      btc_tweets_column, eth_tweets_column, doge_tweets_column,
@@ -567,13 +577,13 @@ sandp_pchange_column <- sandp_hist_prices %>%
   mutate(index = 100*close/close[1],
            pc_change = 100*(close- lag(close))/lag(close)) %>%
   dplyr::select(pc_change,date) %>%
-  rename(`S & P 500` = pc_change)
+  dplyr::rename(`S & P 500` = pc_change)
 
 dowjones_pchange_column <- dji_hist_prices %>%
   mutate(index = 100*close/close[1],
            pc_change = 100*(close- lag(close))/lag(close)) %>%
   dplyr::select(pc_change,date) %>%
-  rename(`Dow Jones` = pc_change)
+  dplyr::rename(`Dow Jones` = pc_change)
 
 stocks_pchange_list <- left_join(sandp_pchange_column, dowjones_pchange_column)
 
