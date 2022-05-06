@@ -1,8 +1,15 @@
 # Data transformation
 
-## Nupur Descripiton
 
-Describe what you did to get/clean the data ~1/2 page.
+We extracted most of the data by scraping NASDAQ marketplace, publicly available graphs and free-data available for financial data of the cryptocurrencies. 
+
+All of the data was rendered into csv files before treating them - as we were looking at a static data frame. 
+
+Date formats were corrected to make them uniform in R and missing values were dropped. 
+The only case where we encountered missing values were in the file containing ethereum prices, but entire rows were empty instead of values. Hence the decision was made to drop them. 
+
+Tweet count was obtained from charts into a csv, and index prices were scraped from NASDAQ into a csv.
+
 
 ```{r}
 
@@ -31,7 +38,6 @@ Describe what you did to get/clean the data ~1/2 page.
 # No missing values in our data - as we are primarily sourcing financial data
 ```
 
-Data Cleanup involved converting dates to proper datetime format to be able to display them on time series and filtering to the dates we selected, 2020 to now.
 
 ```{r}
 #Part 4 - Data treatment and clean up of missing values

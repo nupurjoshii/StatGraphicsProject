@@ -15,57 +15,45 @@ All data collected has been observed and analyzed between 1st January 2020 and 3
 
 ## Data Sources:
 
-```{=tex}
-\begin{itemize}
-\item Use a linear kernel. 
-\item Perform cross validation on a grid of values $\epsilon=0.1, 0.2, \cdots, 1$ and cost$=0.1, 0.5, 1, 5, 10, 50, 100$ values ....
-\item What is the loss used in the cross validation (CV)?
-\item Plot the cross validation heat map.
-\item Train a linear kernel support vector regression using the optimal parameters selected using CV.
-\item Compute the train and test error.
-\end{itemize}
-```
 
 ### Cryptocurrency Daily Price 
 
-```{=tex}
-\begin{itemize}
-\item Obtained from https://www.investing.com/ in a csv format.
-\item Contains Volume, opening price, high, low for each crypto currency.
-\end{itemize}
-```
+Obtained from https://www.investing.com/ in a csv format.
+Contains Volume, opening price, high, low for each crypto currency.
+
+
 
 
 ### S&P500 and Dow Jones Index daily Price and Volume
 
-```{=tex}
-\begin{itemize}
-\item Scraped from NASDAQ using Quandl library. NASDAQ being the official marketplace for financial and economic data,was the most reliable and efficient source. 
-\item Contains Volume, opening price, closing price, high, low for each index
-\end{itemize}
-```
+Scraped from NASDAQ using Quandl library. NASDAQ being the official marketplace for financial and economic data,was the most reliable and efficient source. 
+
+Contains Volume, opening price, closing price, high, low for each index
 
 
 ### MarketCap Data of Popular Crypto Currencies
 
-```{=tex}
-\begin{itemize}
-\item Obtained from https://www.coingecko.com/ - using the library geckor.
-\item They were several sources of marketcap data, the most popular being coinmarketcap - however API calls were expensive and not freely available. Coinmarketcap is the one stop source for all crypto data, for paid/premium users. Coingecko is a close alternative but doesnt provide globalmarketcap data. 
-\item Because of the price point, and the necessity of global market capitalization data for our analysis, I manually obtained global market capitalization data from coinmarketcap and rendered it into a csv file - which has been separately uploaded to the git repository.
-\end{itemize}
-```
+
+Obtained from https://www.coingecko.com/ - using the library geckor.
+
+They were several sources of marketcap data, the most popular being coinmarketcap - however API calls were expensive and not freely available. Coinmarketcap is the one stop source for all crypto data, for paid/premium users. Coingecko is a close alternative but doesnt provide globalmarketcap data. 
+
+Because of the price point, and the necessity of global market capitalization data for our analysis, I manually obtained global market capitalization data from coinmarketcap and rendered it into a csv file - which has been separately uploaded to the git repository.
+
+
 
 
 
 ### Twitter Data
-```{=tex}
-\begin{itemize}
-\item The academicTwitter library is only available upon request to some users and the regular Twitter developer API doesnt provide historical data beyond 7 days. 
-\item We tried scraping mentions on twitter per keyword, but each callback only allowed for 1500 tweets and limited us to 1 million tweets per day - which wouldnt have allowed us to obtain tweet_count by keyword for the last 2 years.
-\item The data was finally obtained by scraping a publicly available graph  on bitinfocharts using python( added separately to git repository ) and the data was rendered into a csv file - which was then used to analyse count of tweets for the keywords - ethereum, dogecoin and bitcoin.
-\end{itemize}
-```
+
+
+The academicTwitter library is only available upon request to some users and the regular Twitter developer API doesnt provide historical data beyond 7 days. 
+
+We tried scraping mentions on twitter per keyword, but each callback only allowed for 1500 tweets and limited us to 1 million tweets per day - which wouldnt have allowed us to obtain tweet_count by keyword for the last 2 years.
+
+The data was finally obtained by scraping a publicly available graph  on bitinfocharts using python( added separately to git repository ) and the data was rendered into a csv file - which was then used to analyse count of tweets for the keywords - ethereum, dogecoin and bitcoin.
+
+
 
 
 
@@ -110,7 +98,7 @@ library(treemapify)
 ```{r data loading}
 
 #2.1 Daily Price of 3 popular crypto currencies and 2 standard market indices -----------------------
-tq_index("SP500")
+#tq_index("SP500")
 sandp_hist_prices <- tq_get(c("^GSPC"),
               get = "stock.prices",
               from   = "2020-01-01",

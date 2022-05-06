@@ -1,5 +1,18 @@
 # Results
 
+###Market Capitalization of cryptocurrencies 2020-2022
+The value of the total cryptocurrency market has risen to more than 1.5 trillion, owing to the meteoric rise of bitcoin, ether, and dogecoin. With a market cap of approximately 67 billion, Dogecoin alone is worth more than 75% of the companies in the S&P 500. Although digital currencies have grown in popularity in recent months, they remain a small part of the global markets for stocks, bonds, and gdp.
+
+### With great returns come great volatility
+Much of the hype surrounding cryptocurrencies has been self-fulfilling. During the pandemic, trading volume increased as a growing number of investors gained access to crypto markets via a variety of platforms. Investors see incredible gains and enter the market, putting additional upward pressure on prices. However, every breathtaking rally has been followed by an equally punishing crash, and cryptocurrencies lack a fundamental anchor like the par value of a bond or the discounted cash flows of a stock.
+Newer Entrants Are the Top Drivers of Cryptocurrency Growth
+We weren't surprised to discover that bitcoin accounted for most of the growth of the cryptocurrency market in aggregate, but it was surprising to see that bitcoin has rapidly lost market share to these other cryptocurrencies in recent months. 
+Ether accounts for the first leg of that lopsided growth. And though altcoins like cardano , binance coin and dogecoin are often overlooked, their market share has grown substantially over the past    months
+Ether has experienced sharp spikes and tumbles in its price as enthusiasts speculated on a wide variety of applications for the ethereum blockchain like NFT.
+
+###The Power of Social Media
+
+The rise of dogecoin has defined the power of memes more than any other move in digital-currency markets. It is a cryptocurrency that was created as a joke but has since risen more than 10,000% by 2021. Dogecoin's total market value soared to more than $80 billion at its peak in 2021. Dogecoin's wild swings should serve as a cautionary note to bitcoin investors as well. While the early supporters of cryptocurrency emphasized its utility as an inflation hedge or a store of value, it has no long-term history as either, and its value is heavily influenced by sentiment and momentum. If sentiment turns against it, the price may fall, and a rising price is bitcoin's most appealing feature to new investors
 
 
 ## Crypto Work and Graphs

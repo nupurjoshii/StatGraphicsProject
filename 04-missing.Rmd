@@ -1,27 +1,30 @@
 # Missing values
 
-Correlation --> missing values
+Our data that we loaded did not have missing values.
 
+When comparing the Dow Jones Index and the S&P 500 to that of the cryptocurrency prices, there are some days on which there are no price values. This is due to the market not being open. This however does not effect the price of the DJI or SP500 on those days as it just continues on the next open market day from where it had stopped. The large amount of data points make it such that these "missing points" are not visible.
+
+Moreover, when computing the correlation heatmap these data points proved to be an issue, so we had to get rid of them. 
 ```{r}
 
 #4.2 find NA
 # which variables have NA's and how many NA's
-colSums(is.na(eth))
-eth <- na.omit(eth)
-#empty rows dropped as they have no values in the CSV in either of the columns
-colSums(is.na(btc))
-colSums(is.na(doge))
-colSums(is.na(dji_hist_prices))
-colSums(is.na(sandp_hist_prices))
-colSums(is.na(btc_tweets))
-colSums(is.na(eth_tweets))
-colSums(is.na(doge_tweets))
-
-#check for missing values
-colSums(is.na(btc_tweet_count))
-colSums(is.na(eth_tweet_count))
-colSums(is.na(doge_tweet_count))
-colSums(is.na(sandp_hist_prices))
+# colSums(is.na(eth))
+# eth <- na.omit(eth)
+# #empty rows dropped as they have no values in the CSV in either of the columns
+# colSums(is.na(btc))
+# colSums(is.na(doge))
+# colSums(is.na(dji_hist_prices))
+# colSums(is.na(sandp_hist_prices))
+# colSums(is.na(btc_tweets))
+# colSums(is.na(eth_tweets))
+# colSums(is.na(doge_tweets))
+# 
+# #check for missing values
+# colSums(is.na(btc_tweet_count))
+# colSums(is.na(eth_tweet_count))
+# colSums(is.na(doge_tweet_count))
+# colSums(is.na(sandp_hist_prices))
 
 #no missing values as we are dealing with financial market data
 ```
